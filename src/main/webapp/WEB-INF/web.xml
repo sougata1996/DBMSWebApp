@@ -69,4 +69,34 @@
     <servlet-name>CredentialsServlet</servlet-name>
     <url-pattern>/CredentialsServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>StudentSignupServlet</display-name>
+    <servlet-name>StudentSignupServlet</servlet-name>
+    <servlet-class>web.jdbc.StudentSignupServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>StudentSignupServlet</servlet-name>
+    <url-pattern>/StudentSignupServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>TeacherSignupServlet</display-name>
+    <servlet-name>TeacherSignupServlet</servlet-name>
+    <servlet-class>com.credentials.TeacherSignupServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TeacherSignupServlet</servlet-name>
+    <url-pattern>/TeacherSignupServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>TeacherLoginServlet</display-name>
+    <servlet-name>TeacherLoginServlet</servlet-name>
+    <servlet-class>com.teacher.TeacherLoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TeacherLoginServlet</servlet-name>
+    <url-pattern>/TeacherLoginServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

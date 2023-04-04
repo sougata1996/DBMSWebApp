@@ -44,6 +44,27 @@ CREATE TABLE admin_credentials (
     pwd varbinary(200) NOT NULL
 );
 
+CREATE TABLE EVALUATION (
+eval_name varchar(50) not null,
+eval_type enum ('Homework', 'Project', 'Assignment', 'Mid Term', 'Final Term') not null,
+teacher_id int not null,
+course_id int not null,
+primary key (teacher_id, course_id, eval_name, eval_type),
+foreign key (teacher_id) references Teacher(id) on update cascade on delete cascade,
+FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+create table results(
+score int not null,
+eval_name varchar(50) not null,
+eval_type varchar(20) not null,
+course_id int not null,
+student_id int not null,
+primary key (eval_name, eval_type, course_id, student_id),
+foreign key (student_id) references Student(id) on update cascade on delete cascade,
+FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 -- insert into admin_credentials(login_name, pwd) 
 -- values ("admin" , aes_encrypt('admin','admin'));
 
@@ -190,3 +211,52 @@ BEGIN
         
 	END IF;
 END //
+
+create table student_credentials(
+id int unique not null,
+pwd varbinary(200) not null,
+foreign key (id) references Student(id) on update cascade on delete cascade
+);
+
+create table teacher_credentials(
+id int unique not null,
+pwd varbinary(200) not null,
+foreign key (id) references Teacher(id) on update cascade on delete cascade
+);
+
+delimiter //
+create procedure insertStudentLogin(
+id int, 
+pwd varbinary(200)
+)
+begin 
+insert into student_credentials values(id, pwd);
+select * from student_credentials where id = id;
+end //
+
+delimiter //
+create procedure insertTeacherLogin(
+id int, 
+pwd varbinary(200)
+)
+begin 
+insert into teacher_credentials values(id, pwd);
+select * from teacher_credentials where id = id;
+end //
+
+delimiter //
+create function validateTeacherLogin(userId VARCHAR(50), passCode varchar(200))
+returns boolean
+reads sql data
+begin
+	declare res_pwd varchar(200);
+    
+    select cast(pwd as char character set utf8) into res_pwd from teacher_credentials where id = userId;
+    if res_pwd = passCode then
+		return true;
+	else
+		return false;
+        
+	end if;
+end //
+
