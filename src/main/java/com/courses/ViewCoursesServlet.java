@@ -1,4 +1,4 @@
-package com.teacher;
+package com.courses;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.RequestDispatcher;
@@ -7,25 +7,30 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import web.jdbc.Teacher;
+import web.jdbc.TeacherDBUtil;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import com.credentials.CredentialsDbUtil;
 
 /**
- * Servlet implementation class TeacherLoginServlet
+ * Servlet implementation class ViewCoursesServlet
  */
-public class TeacherLoginServlet extends HttpServlet {
+public class ViewCoursesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private CredentialsDbUtil teacherLogin;
+	private TeacherDBUtil teacherRecord;
 	@Resource(name = "jdbc/scoresdb")
 	private DataSource dataSource;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public TeacherLoginServlet() {
+    public ViewCoursesServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,26 +40,20 @@ public class TeacherLoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int username = Integer.parseInt(request.getParameter("username"));
-		String password = request.getParameter("password");
-		
-        
+		String teacherId = request.getSession().getAttribute("teacherId").toString();
+		List<Teacher> teachers = new ArrayList<>();
 		try {
-			teacherLogin = new CredentialsDbUtil(dataSource);
-			boolean result = teacherLogin.validateteacherCredential(username, password);
-			if (result) {
-				request.getSession().setAttribute("teacherId", username);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/teacher_landingpage.jsp");
-				dispatcher.forward(request, response);
-			} 
-			else {
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/teacher_login.jsp");
-				dispatcher.forward(request, response);
-			}
+			teacherRecord = new TeacherDBUtil(dataSource);
+			teachers = teacherRecord.getTeacherCourses(teacherId);
 		} catch (Exception e) {
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/teacher_login.jsp");
-			dispatcher.forward(request, response);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		request.setAttribute("courses_list", teachers);
+				
+		// send to JSP page (view)
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/viewcourses_evaluations.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	/**

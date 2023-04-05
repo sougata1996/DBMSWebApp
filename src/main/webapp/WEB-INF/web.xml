@@ -99,4 +99,24 @@
     <servlet-name>TeacherLoginServlet</servlet-name>
     <url-pattern>/TeacherLoginServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ViewCoursesServlet</display-name>
+    <servlet-name>ViewCoursesServlet</servlet-name>
+    <servlet-class>com.courses.ViewCoursesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewCoursesServlet</servlet-name>
+    <url-pattern>/ViewCoursesServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>EvaluationControllerServlet</display-name>
+    <servlet-name>EvaluationControllerServlet</servlet-name>
+    <servlet-class>com.evaluations.EvaluationControllerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EvaluationControllerServlet</servlet-name>
+    <url-pattern>/EvaluationControllerServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
