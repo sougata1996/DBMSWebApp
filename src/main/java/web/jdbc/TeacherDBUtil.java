@@ -108,24 +108,25 @@ public class TeacherDBUtil {
 		}
 	}
 
-	public Teacher getTeacher(String theTeacherId) throws Exception {
-		Teacher theTeacher = null;
+	public List<Teacher> getTeacher(String theTeacherId) throws Exception {
+		List<Teacher> teachers = new ArrayList<>();
 		try {
 			myConn = dataSource.getConnection();
 			statement = myConn.prepareCall("{call getAllTeachersData(?)}");
 			statement.setInt(1, Integer.parseInt(theTeacherId));
 			myRs = statement.executeQuery();
-			
-			if (myRs.next()) {
+			if(myRs.next()) {
+			while (myRs.next()) {
 				int id = myRs.getInt("id");
 				String firstName = myRs.getString("first_name");
 				String lastName = myRs.getString("last_name");
 				String email = myRs.getString("email");
 				int courseId = myRs.getInt("course_id");
 				String courseName = myRs.getString("course_name");
-				
 				// use the studentId during construction
-				theTeacher = new Teacher(id, firstName, lastName, email, courseId, courseName);
+				Teacher record = new Teacher(id, firstName, lastName, email, courseId, courseName);
+				teachers.add(record);
+			}
 			}
 			else {
 				throw new Exception("Could not find teacher id: " + theTeacherId);
@@ -136,7 +137,7 @@ public class TeacherDBUtil {
 			close();
 		}
 		
-		return theTeacher;
+		return teachers;
 	}
 
 	public void updateTeacher(Teacher theTeacher) throws Exception {
