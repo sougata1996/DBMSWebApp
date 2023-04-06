@@ -22,6 +22,7 @@
                   <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <a href="signup-response.jsp" class="btn btn-link btn-block">Signup</a>
               </form>
             </div>
           </div>

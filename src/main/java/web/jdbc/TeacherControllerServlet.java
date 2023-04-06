@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -92,10 +94,19 @@ public class TeacherControllerServlet extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("teacherId"));
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
-		String courseName = request.getParameter("courseName");
+		String courseNames = request.getParameter("courseNames");
+		String[] arr = courseNames.split(",");
+		List<String> list = Arrays.asList(arr);
+		
+		String courseIds = request.getParameter("courseIds");
+		String[] arr_2 = courseIds.split(",");
+		List<Integer> list_2 = new ArrayList<>();
+		for (String courseId : arr_2) {
+			list_2.add(Integer.parseInt(courseId.replaceAll("[^0-9]", "")));
+		}
 		
 		// create a new student object
-		Teacher theTeacher = new Teacher(id, firstName, lastName, courseName);
+		Teacher theTeacher = new Teacher(id, firstName, lastName, list, list_2);
 		
 		// perform update on database
 		teacherDbUtil.updateTeacher(theTeacher);
@@ -108,7 +119,7 @@ public class TeacherControllerServlet extends HttpServlet {
 		String theTeacherId = request.getParameter("teacherId");
 				
 		// get student from database (db util)
-		Teacher theTeacher = teacherDbUtil.getTeacher(theTeacherId);
+		Teacher theTeacher = teacherDbUtil.getTeacher(Integer.parseInt(theTeacherId));
 		
 		// place student in the request attribute
 		request.setAttribute("THE_TEACHER", theTeacher);
@@ -125,7 +136,7 @@ public class TeacherControllerServlet extends HttpServlet {
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		String email = request.getParameter("email");	
-		int courseId = Integer.parseInt(request.getParameter("courseId"));
+		Integer courseId = Integer.parseInt(request.getParameter("courseId"));
 		String courseName = request.getParameter("courseName");
 		
 		Teacher theTeacher = new Teacher(id, firstName, lastName, email, courseId, courseName);

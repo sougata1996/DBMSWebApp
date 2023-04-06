@@ -22,6 +22,7 @@
 		
 			<input type="hidden" name="command" value="UPDATE" />
 			<input type="hidden" name="teacherId" value="${THE_TEACHER.id}" />
+			<input type="hidden" name="courseIds" value="${THE_TEACHER.courseIds}" />
 			
 			<table>
 				<tbody>
@@ -37,8 +38,8 @@
 					</tr>
 					
 					<tr>
-						<td><label>Course Name:</label></td>
-						<td><input type="text" name="courseName" value="${THE_TEACHER.courseName}"/></td>
+						<td><label>Course Names:</label></td>
+						<td><input type="text" name="courseNames" value="${THE_TEACHER.courseNames}"/></td>
 					</tr>
 					
 					<tr>

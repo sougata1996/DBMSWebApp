@@ -44,7 +44,7 @@ CREATE TABLE admin_credentials (
     pwd varbinary(200) NOT NULL
 );
 
-CREATE TABLE evaluation (
+CREATE TABLE EVALUATION (
 eval_name varchar(50) not null,
 eval_type enum ('Homework', 'Project', 'Assignment', 'Mid Term', 'Final Term') not null,
 teacher_id int not null,
@@ -119,7 +119,8 @@ CREATE PROCEDURE viewTeacherCourseData()
 	BEGIN
 		SELECT t.id, t.first_name, t.last_name, t.email, c.id AS course_id , c.name AS course_name 
         FROM Teacher t
-        LEFT JOIN Course c ON c.teacher_id = t.id;
+        LEFT JOIN Course c ON c.teacher_id = t.id
+        ORDER BY t.id;
 END //
 
 DELIMITER //
@@ -128,7 +129,8 @@ CREATE PROCEDURE viewStudentCourseData()
 		SELECT s.id, s.first_name, s.last_name, s.email, sc.course_id AS course_id , c.name AS course_name 
         FROM Student s
         JOIN Student_Course sc ON sc.student_id = s.id 
-        JOIN Course c ON sc.course_id = c.id;
+        JOIN Course c ON sc.course_id = c.id
+        ORDER BY s.id;
 END //
 
 DELIMITER //
@@ -154,14 +156,15 @@ CREATE PROCEDURE updateTeacher(
 	id_p INT,
     first_name_p VARCHAR(50),
     last_name_p VARCHAR(50),
-    name_p VARCHAR(50)
+    name_p VARCHAR(50),
+    course_id_p INT
 )
 	BEGIN
 		UPDATE Teacher t
         JOIN Course c ON t.id = c.teacher_id
         SET t.first_name = first_name_p,
 			t.last_name = last_name_p,
-			c.name = name_p WHERE t.id = id_p;
+			c.name = name_p WHERE t.id = id_p AND c.id = course_id_p;
 END //
 
 DELIMITER //
@@ -259,24 +262,3 @@ begin
         
 	end if;
 end //
-
-delimiter //
-create procedure viewEvaluations(
-teacher_id int, 
-course_id int)
-begin
-select * from evaluation where teacher_id = teacher_id and course_id = course_id;
-end //
-
-delimiter //
-create procedure addEvaluationForACourse(
-teacher_id int, 
-course_id int, 
-eval_name varchar(200),
-eval_type varchar(200)
-)
-begin
-insert into evaluation values (eval_name, eval_type,teacher_id, course_id);
-select * from evaluation where teacher_id = teacher_id;
-end //
-

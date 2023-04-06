@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -27,6 +29,15 @@ public class TeacherDBUtil {
 	public List<Teacher> getTeachers() throws Exception {
 		
 		List<Teacher> teachers = new ArrayList<>();
+		Map<Integer, List<Integer>> multiMap_1 = new HashMap<>();
+		List<Integer> courseIds = new ArrayList<>();
+		
+		Map<Integer, List<String>> multiMap_2 = new HashMap<>();
+		List<String> courseNames = new ArrayList<>();
+		
+		Map<Integer, Teacher> multiMap_3 = new HashMap<>();
+		
+		List<Teacher> res = new ArrayList<>();
 		
 		try {
 			// get a connection
@@ -48,17 +59,42 @@ public class TeacherDBUtil {
 				String firstName = myRs.getString("first_name");
 				String lastName = myRs.getString("last_name");
 				String email = myRs.getString("email");
+				
 				int courseId = myRs.getInt("course_id");
 				String courseName = myRs.getNString("course_name");
 				
+				if (multiMap_1.containsKey(id) && multiMap_1.isEmpty() == false) {
+					courseIds.add(courseId);
+				}
+				else {
+					courseIds = new ArrayList<>();
+					courseIds.add(courseId);
+				}
+				
+				if (multiMap_2.containsKey(id) && multiMap_2.isEmpty() == false) {
+					courseNames.add(courseName);
+				}
+				else {
+					courseNames = new ArrayList<>();
+					courseNames.add(courseName);
+				}
+				
+				multiMap_1.put(id, courseIds);
+				multiMap_2.put(id, courseNames);
 				// create new student object
-				Teacher tempTeacher = new Teacher(id, firstName, lastName, email, courseId, courseName);
+				Teacher tempTeacher = new Teacher(id, firstName, lastName, email, multiMap_1.get(id), multiMap_2.get(id));
 				
 				// add it to the list of students
-				teachers.add(tempTeacher);				
+				multiMap_3.put(id, tempTeacher);
 			}
 			
-			return teachers;
+			for (Map.Entry<Integer, Teacher> entry : multiMap_3.entrySet()) {
+			    res.add(entry.getValue());
+			}
+			
+			return res;
+			
+			//return teachers;
 		}
 		finally {
 			// close JDBC objects
@@ -89,18 +125,28 @@ public class TeacherDBUtil {
 	public void addTeacher(Teacher theTeacher) throws Exception {
 		try {
 		myConn = dataSource.getConnection();
-		statement = myConn.prepareCall("{call insertTeacherData(?,?,?,?)}");
+		statement = myConn.prepareCall("{call getAllTeachersData(?)}");
 		statement.setInt(1, theTeacher.getId());
-		statement.setString(2, theTeacher.getEmail());
-		statement.setString(3, theTeacher.getFirstName());
-		statement.setString(4, theTeacher.getLastName());
-		statement.execute();
+		myRs = statement.executeQuery();
 		
-		statement = myConn.prepareCall("{call insertTeacherCourseData(?,?,?)}");
-		statement.setInt(1, theTeacher.getCourseId());
-		statement.setString(2, theTeacher.getCourseName());
-		statement.setInt(3, theTeacher.getId());
-		statement.execute();
+		if (!myRs.next()) {
+			statement = myConn.prepareCall("{call insertTeacherData(?,?,?,?)}");
+			statement.setInt(1, theTeacher.getId());
+			statement.setString(2, theTeacher.getEmail());
+			statement.setString(3, theTeacher.getFirstName());
+			statement.setString(4, theTeacher.getLastName());
+			statement.execute();
+		}
+		
+		List<Integer> courses = theTeacher.getCourseIds();
+		for (int i=0; i<courses.size(); i++)
+		{
+			statement = myConn.prepareCall("{call insertTeacherCourseData(?,?,?)}");
+			statement.setInt(1, theTeacher.getCourseId(i));
+			statement.setString(2, theTeacher.getCourseName(i));
+			statement.setInt(3, theTeacher.getId());
+			statement.execute();
+		}
 		}
 		finally {
 			// close JDBC objects
@@ -108,6 +154,73 @@ public class TeacherDBUtil {
 		}
 	}
 
+	public Teacher getTeacher(int theTeacherId) throws Exception {
+		Teacher theTeacher = null;
+		List<Integer> courseIds = new ArrayList<Integer>();
+		List<String> courseNames = new ArrayList<String>();
+		int id = 0;
+		String firstName = null, lastName = null, email = null;
+		
+		try {
+			myConn = dataSource.getConnection();
+			statement = myConn.prepareCall("{call getAllTeachersData(?)}");
+			statement.setInt(1, theTeacherId);
+			myRs = statement.executeQuery();
+			
+			while (myRs.next()) {
+					id = myRs.getInt("id");
+					firstName = myRs.getString("first_name");
+					lastName = myRs.getString("last_name");
+					email = myRs.getString("email");
+					int courseId = myRs.getInt("course_id");
+					String courseName = myRs.getString("course_name");
+					courseIds.add(courseId);
+					courseNames.add(courseName);
+				}
+				if(id == 0) {
+					return null;
+				}
+				theTeacher = new Teacher(id, firstName, lastName, email, courseIds, courseNames);
+			}
+		finally {
+			// close JDBC objects
+			close();
+		}
+		
+		return theTeacher;
+	}
+
+	public void updateTeacher(Teacher theTeacher) throws Exception {
+		try {
+		myConn = dataSource.getConnection();
+		for (int i=0; i<theTeacher.getCourseNames().size(); i++)
+		{
+			statement = myConn.prepareCall("{call updateTeacher(?, ?, ?, ?, ?)}");
+			statement.setInt(1, theTeacher.getId());
+			statement.setString(2, theTeacher.getFirstName());
+			statement.setString(3, theTeacher.getLastName());
+			statement.setString(4, theTeacher.getCourseName(i));
+			statement.setInt(5, theTeacher.getCourseId(i));
+			statement.execute();
+		}
+		}
+		finally {
+			close();
+		}
+	}
+
+	public void deleteTeacher(int id) throws Exception {
+		try {
+		myConn = dataSource.getConnection();
+		statement = myConn.prepareCall("{call deleteTeacher(?)}");
+		statement.setInt(1, id);
+		statement.execute();
+		}
+		finally {
+			close();
+		}
+	}
+	
 	public List<Teacher> getTeacherCourses(String theTeacherId) throws Exception {
 		List<Teacher> teachers = new ArrayList<>();
 		try {
@@ -131,66 +244,7 @@ public class TeacherDBUtil {
 			// close JDBC objects
 			close();
 		}
-		
-		return teachers;
-	}
-	
-	public List<Teacher> getTeacher(String theTeacherId) throws Exception {
-		List<Teacher> teachers = new ArrayList<>();
-		try {
-			myConn = dataSource.getConnection();
-			statement = myConn.prepareCall("{call getAllTeachersData(?)}");
-			statement.setInt(1, Integer.parseInt(theTeacherId));
-			myRs = statement.executeQuery();
-			if(myRs.next()) {
-			while (myRs.next()) {
-				int id = myRs.getInt("id");
-				String firstName = myRs.getString("first_name");
-				String lastName = myRs.getString("last_name");
-				String email = myRs.getString("email");
-				int courseId = myRs.getInt("course_id");
-				String courseName = myRs.getString("course_name");
-				// use the studentId during construction
-				Teacher record = new Teacher(id, firstName, lastName, email, courseId, courseName);
-				teachers.add(record);
-			}
-			}
-			else {
-				throw new Exception("Could not find teacher id: " + theTeacherId);
-			}
-		}
-		finally {
-			// close JDBC objects
-			close();
-		}
-		
-		return teachers;
-	}
 
-	public void updateTeacher(Teacher theTeacher) throws Exception {
-		try {
-		myConn = dataSource.getConnection();
-		statement = myConn.prepareCall("{call updateTeacher(?, ?, ?, ?)}");
-		statement.setInt(1, theTeacher.getId());
-		statement.setString(2, theTeacher.getFirstName());
-		statement.setString(3, theTeacher.getLastName());
-		statement.setString(4, theTeacher.getCourseName());
-		statement.execute();
-		}
-		finally {
-			close();
-		}
-	}
-
-	public void deleteTeacher(int id) throws Exception {
-		try {
-		myConn = dataSource.getConnection();
-		statement = myConn.prepareCall("{call deleteTeacher(?)}");
-		statement.setInt(1, id);
-		statement.execute();
-		}
-		finally {
-			close();
-		}
+		return teachers;
 	}
 }

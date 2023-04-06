@@ -1,80 +1,72 @@
 package web.jdbc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Teacher {
 
 	private int id;
 	private String firstName;
 	private String lastName;
 	private String email;
-	private int courseId;
-	private String courseName;
+	private List<Integer> courseIds = new ArrayList<>();
+	private List<String> courseNames = new ArrayList<>();;
 
-	public Teacher(int id, String firstName, String lastName, String email, int courseId, String courseName) {
+	public Teacher(int id, String firstName, String lastName, String email, Integer courseId, String courseName) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.courseId = courseId;
-		this.courseName = courseName;
+		this.courseIds.add(courseId);
+		this.courseNames.add(courseName);
 	}
 
-	public Teacher(int id, String firstName, String lastName, String courseName) {
+	public Teacher(int id, String firstName, String lastName, String email, List<Integer> courseIds, List<String> courseNames) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.courseName = courseName;
+		this.email = email;
+		this.courseIds = courseIds;
+		this.courseNames = courseNames;
+	}
+	
+	public Teacher(int id, String firstName, String lastName, List<String> courseNames, List<Integer> courseIds) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.courseNames = courseNames;
+		this.courseIds = courseIds;
 	}
 	
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getFirstName() {
 		return firstName;
 	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
+	
 	public String getLastName() {
 		return lastName;
 	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
+	
 	public String getEmail() {
 		return email;
 	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public int getCourseId() {
-		return courseId;
+	
+	public Integer getCourseId(int index) {
+		return courseIds.get(index);
 	}
 
-	public void setCourseId(int id) {
-		this.courseId = id;
+	public String getCourseName(int index) {
+		return courseNames.get(index);
 	}
 	
-	public String getCourseName() {
-		return courseName;
+	public List<Integer> getCourseIds() {
+		return courseIds;
 	}
-	
-	public void setCourseName(String name) {
-		this.courseName = name;
-	}
-	
-	@Override
-	public String toString() {
-		return "Teacher [id=" + id + ", courseId=" + courseId + ", courseName=" + courseName + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
+
+	public List<String> getCourseNames() {
+		return courseNames;
 	}
 }

@@ -53,8 +53,19 @@
 						<td> ${tempTeacher.firstName} </td>
 						<td> ${tempTeacher.lastName} </td>
 						<td> ${tempTeacher.email} </td>
-						<td> ${tempTeacher.courseId} </td>
-						<td> ${tempTeacher.courseName} </td>
+						
+						<td>
+						<c:forEach var="tempTeacherCourseId" items="${tempTeacher.courseIds}">
+							| ${tempTeacherCourseId} |
+						</c:forEach>
+						</td>
+						
+						<td>
+						<c:forEach var="tempTeacherCourseName" items="${tempTeacher.courseNames}">
+							| ${tempTeacherCourseName} |
+						</c:forEach>
+						</td>
+						
 						<td> 
 							<a href="${tempLink}"> Update</a>
 							| 
