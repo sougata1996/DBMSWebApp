@@ -230,22 +230,22 @@ foreign key (id) references Teacher(id) on update cascade on delete cascade
 
 delimiter //
 create procedure insertStudentLogin(
-id int, 
+newId int, 
 pwd varbinary(200)
 )
 begin 
-insert into student_credentials values(id, pwd);
-select * from student_credentials where id = id;
+insert into student_credentials values(newId, pwd);
+select * from student_credentials where id = newId;
 end //
 
 delimiter //
 create procedure insertTeacherLogin(
-id int, 
+newId int, 
 pwd varbinary(200)
 )
 begin 
-insert into teacher_credentials values(id, pwd);
-select * from teacher_credentials where id = id;
+insert into teacher_credentials values(newId, pwd);
+select * from teacher_credentials where id = newId;
 end //
 
 delimiter //
@@ -266,10 +266,10 @@ end //
 
 delimiter //
 create procedure viewEvaluations(
-teacher_id int, 
-course_id int)
+teacherId int, 
+courseId int)
 begin
-select * from evaluation where teacher_id = teacher_id and course_id = course_id;
+select * from evaluation where teacher_id = teacherId and course_id = courseId;
 end //
 
 delimiter //
@@ -282,4 +282,18 @@ eval_type varchar(200)
 begin
 insert into evaluation values (eval_name, eval_type,teacher_id, course_id);
 select * from evaluation where teacher_id = teacher_id;
+end //
+
+
+delimiter //
+create procedure updateEvaluationForACourse(
+teacherId int,
+courseId int, 
+old_eval_name varchar(200),
+evalType varchar(200),
+new_eval_name varchar(200)
+)
+begin
+update evaluation set eval_name = new_eval_name where teacher_id = teacherId and course_id = courseId and eval_name = old_eval_name and
+eval_type = evalType;
 end //

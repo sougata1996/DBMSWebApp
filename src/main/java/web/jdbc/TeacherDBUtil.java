@@ -221,30 +221,37 @@ public class TeacherDBUtil {
 		}
 	}
 	
-	public List<Teacher> getTeacherCourses(String theTeacherId) throws Exception {
-		List<Teacher> teachers = new ArrayList<>();
+	public Teacher getTeacherCourses(String theTeacherId) throws Exception {
+
 		try {
 			myConn = dataSource.getConnection();
 			statement = myConn.prepareCall("{call getAllTeachersData(?)}");
 			statement.setInt(1, Integer.parseInt(theTeacherId));
 			myRs = statement.executeQuery();
+			int id, courseId;
+			id = courseId = 0;
+			String firstName, lastName, email ;
+			firstName = lastName = email = "";
+			List<Integer> courseIds = new ArrayList<>();
+			List<String> courseNames = new ArrayList<>();
 			while (myRs.next()) {
-				int id = myRs.getInt("id");
-				String firstName = myRs.getString("first_name");
-				String lastName = myRs.getString("last_name");
-				String email = myRs.getString("email");
-				int courseId = myRs.getInt("course_id");
+				 id = myRs.getInt("id");
+				 firstName = myRs.getString("first_name");
+				 lastName = myRs.getString("last_name");
+				 email = myRs.getString("email");
+				 courseId = myRs.getInt("course_id");
 				String courseName = myRs.getString("course_name");
-				// use the studentId during construction
-				Teacher record = new Teacher(id, firstName, lastName, email, courseId, courseName);
-				teachers.add(record);
+				courseIds.add(courseId);
+				courseNames.add(courseName);
 			}
+
+			return new Teacher(id, firstName, lastName,email,courseIds, courseNames);
+			
 		}
 		finally {
 			// close JDBC objects
 			close();
 		}
 
-		return teachers;
 	}
 }

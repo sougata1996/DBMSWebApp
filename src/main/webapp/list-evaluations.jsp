@@ -34,19 +34,26 @@
 				
 				<c:forEach var="tempEval" items="${eval_list}">
 				
-					<c:url var="updateLink" value="TeacherControllerServlet">
-						<c:param name="command" value="UPDATE" />
-						<c:param name="teacherId" value="${tempTeacher.id}" />
+					<c:url var="updateLink" value="EvaluationControllerServlet">
+						<c:param name="command" value="LOAD" />
+						<c:param name="teacher_id" value="${tempEval.teacher_id}" />
+						<c:param name="course_id" value="${tempEval.course_id}" />
+						<c:param name="eval_type" value="${tempEval.eval_type}" />
+						<c:param name="eval_name" value="${tempEval.eval_name}" />
 					</c:url>
 					
-					<c:url var="deleteLink" value="TeacherControllerServlet">
+					<c:url var="deleteLink" value="EvaluationControllerServlet">
 						<c:param name="command" value="DELETE" />
-						<c:param name="teacherId" value="${tempTeacher.id}" />
+						<c:param name="teacher_id" value="${tempEval.teacher_id}" />
+						<c:param name="course_id" value="${tempEval.course_id}" />
+						<c:param name="eval_type" value="${tempEval.eval_type}" />
+						<c:param name="eval_name" value="${tempEval.eval_name}" />
 					</c:url>
 					
 					<tr>
-						<td> ${tempEval.eval_name} </td>
+					
 						<td> ${tempEval.eval_type} </td>
+						<td> ${tempEval.eval_name} </td>
 						<td> 
 							<a href="${updateLink}">Update</a>
 							| 

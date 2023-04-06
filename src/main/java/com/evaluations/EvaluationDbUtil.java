@@ -81,6 +81,43 @@ private DataSource dataSource;
 			close();
 		}	
 	}
+	
+	public void updateEvaluationForACourse(int teacherId, int courseId, String old_eval_name, String
+			evalType, String new_eval_name) throws SQLException{
+		try {
+			myConn = dataSource.getConnection();
+			statement = myConn.prepareCall("call updateEvaluationForACourse(?, ?, ?, ?, ?)");
+			statement.setInt(1, teacherId);
+			statement.setInt(2, courseId);
+			statement.setString(3, old_eval_name);
+			statement.setString(4, evalType);
+			statement.setString(5, new_eval_name);
+			myRs = statement.executeQuery();
+		}
+		finally {
+			// close JDBC objects
+			close();
+		}	
+		
+	}
+	
+	public void deleteEvaluationForACourse(int teacherId, int courseId, String eval_name, String
+			evalType) throws SQLException{
+		try {
+			myConn = dataSource.getConnection();
+			statement = myConn.prepareCall("call deleteEvaluationForACourse(?, ?, ?, ?)");
+			statement.setInt(1, teacherId);
+			statement.setInt(2, courseId);
+			statement.setString(3, eval_name);
+			statement.setString(4, evalType);
+			myRs = statement.executeQuery();
+		}
+		finally {
+			// close JDBC objects
+			close();
+		}	
+		
+	}
 
 	private void close() {
 

@@ -27,23 +27,23 @@
 					
 				</tr>
 				
-				<c:forEach var="tempCourse" items="${courses_list}">
+				<c:forEach var="tempCourseId" items="${courseId_list}" varStatus="loop">
 				
 					<c:url var="addEvaluation" value="EvaluationControllerServlet">
 						<c:param name="command" value="ADD" />
-						<c:param name="teacherId" value="${tempCourse.id}" />
-						<c:param name="courseId" value="${tempCourse.courseId}" />
+						<c:param name="teacherId" value="${teacherId}" />
+						<c:param name="courseId" value="${tempCourseId}" />
 					</c:url>
 					
 					<c:url var="viewEvaluation" value="EvaluationControllerServlet">
 						<c:param name="command" value="LIST" />
-						<c:param name="teacherId" value="${tempCourse.id}" />
-						<c:param name="courseId" value="${tempCourse.courseId}" />
+						<c:param name="teacherId" value="${teacherId}" />
+						<c:param name="courseId" value="${tempCourseId}" />
 					</c:url>
 					
 					<tr>
-						<td> ${tempCourse.courseId} </td>
-						<td> ${tempCourse.courseName} </td>
+						<td> ${tempCourseId} </td>
+						<td> ${courseName_list[loop.index]} </td>
 						<td> 
 							<a href="${addEvaluation}"> Add</a>
 							<a href="${viewEvaluation}"> View</a>

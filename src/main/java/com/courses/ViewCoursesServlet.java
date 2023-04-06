@@ -41,15 +41,17 @@ public class ViewCoursesServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String teacherId = request.getSession().getAttribute("teacherId").toString();
-		List<Teacher> teachers = new ArrayList<>();
+		Teacher teacher = null;
 		try {
 			teacherRecord = new TeacherDBUtil(dataSource);
-			teachers = teacherRecord.getTeacherCourses(teacherId);
+			teacher = teacherRecord.getTeacherCourses(teacherId);
+			request.setAttribute("teacherId", teacherId);
+			request.setAttribute("courseId_list", teacher.getCourseIds());
+			request.setAttribute("courseName_list", teacher.getCourseNames());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		request.setAttribute("courses_list", teachers);
 				
 		// send to JSP page (view)
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/viewcourses_evaluations.jsp");
