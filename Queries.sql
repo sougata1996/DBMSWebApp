@@ -262,3 +262,23 @@ begin
         
 	end if;
 end //
+
+delimiter //
+create procedure viewEvaluations(
+teacher_id int, 
+course_id int)
+begin
+select * from evaluation where teacher_id = teacher_id and course_id = course_id;
+end //
+
+delimiter //
+create procedure addEvaluationForACourse(
+teacher_id int, 
+course_id int, 
+eval_name varchar(200),
+eval_type varchar(200)
+)
+begin
+insert into evaluation values (eval_name, eval_type,teacher_id, course_id);
+select * from evaluation where teacher_id = teacher_id;
+end //
