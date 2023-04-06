@@ -185,6 +185,7 @@ CREATE PROCEDURE deleteTeacher(
 	id_p INT
 )
 	BEGIN
+		DELETE FROM Course WHERE teacher_id = id_p;
 		DELETE FROM teacher WHERE id = id_p;
 END //
 
