@@ -111,7 +111,7 @@ CREATE PROCEDURE insertStudentCourseData(
 )
 	BEGIN
 		INSERT INTO Student_Course (student_id, course_id)
-		VALUES (student_id, course_id_p);
+		VALUES (student_id_p, course_id_p);
 END //
 
 DELIMITER //
