@@ -33,8 +33,6 @@
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Email</th>
-					<th>Course Id</th>
-					<th>Course Name</th>
 					<th>Action</th>
 				</tr>
 				
@@ -50,19 +48,24 @@
 						<c:param name="studentId" value="${tempStudent.id}" />
 					</c:url>
 					
+					<c:url var="viewCourseLink" value="StudentControllerServlet">
+						<c:param name="command" value="VIEW_COURSE" />
+						<c:param name="studentId" value="${tempStudent.id}" />
+					</c:url>
+					
 					<tr>
 						<td> ${tempStudent.id} </td>
 						<td> ${tempStudent.firstName} </td>
 						<td> ${tempStudent.lastName} </td>
 						<td> ${tempStudent.email} </td>
-						<td> ${tempStudent.courseId} </td>
-						<td> ${tempStudent.courseName} </td>
 						<td> 
 							<a href="${tempLink}"> Update</a>
 							| 
 							<a href="${deleteLink}"
 							onclick="if (!(confirm('Are you sure you want to delete this student?'))) return false">
 							Delete</a>
+							|
+							<a href="${viewCourseLink}"> View Course </a>
 						</td>
 					</tr>
 				

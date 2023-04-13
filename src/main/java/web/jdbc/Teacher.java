@@ -10,7 +10,7 @@ public class Teacher {
 	private String lastName;
 	private String email;
 	private List<Integer> courseIds = new ArrayList<>();
-	private List<String> courseNames = new ArrayList<>();;
+	private List<String> courseNames = new ArrayList<>();
 
 	public Teacher(int id, String firstName, String lastName, String email, Integer courseId, String courseName) {
 		this.id = id;

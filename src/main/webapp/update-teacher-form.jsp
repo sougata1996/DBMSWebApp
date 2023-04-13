@@ -38,9 +38,10 @@
 					</tr>
 					
 					<tr>
-						<td><label>Course Names:</label></td>
-						<td><input type="text" name="courseNames" value="${THE_TEACHER.courseNames}"/></td>
+  						<td><label>Course Names:</label></td>
+  						<td><input type="text" name="courseNames" value="${THE_TEACHER.courseNames.toString().replace('[','').replace(']','')}"/></td>
 					</tr>
+					
 					
 					<tr>
 						<td><label></label></td>

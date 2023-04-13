@@ -28,7 +28,6 @@ public class TeacherDBUtil {
 	
 	public List<Teacher> getTeachers() throws Exception {
 		
-		List<Teacher> teachers = new ArrayList<>();
 		Map<Integer, List<Integer>> multiMap_1 = new HashMap<>();
 		List<Integer> courseIds = new ArrayList<>();
 		

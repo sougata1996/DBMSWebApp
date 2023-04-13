@@ -146,8 +146,8 @@ CREATE PROCEDURE getAllStudentsData(id INT)
 	BEGIN
 		SELECT s.id, s.first_name, s.last_name, s.email, sc.course_id AS course_id , c.name AS course_name 
         FROM Student s
-        JOIN Student_Course sc ON sc.student_id = s.id 
-        JOIN Course c ON sc.course_id = c.id
+        LEFT JOIN Student_Course sc ON sc.student_id = s.id 
+        LEFT JOIN Course c ON sc.course_id = c.id
         WHERE s.id = id;
 END //
 

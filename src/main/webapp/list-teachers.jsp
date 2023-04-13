@@ -30,8 +30,6 @@
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Email</th>
-					<th>Course Id</th>
-					<th>Course Name</th>
 					<th>Action</th>
 					
 				</tr>
@@ -48,23 +46,16 @@
 						<c:param name="teacherId" value="${tempTeacher.id}" />
 					</c:url>
 					
+					<c:url var="viewCourseLink" value="TeacherControllerServlet">
+						<c:param name="command" value="VIEW_COURSE" />
+						<c:param name="teacherId" value="${tempTeacher.id}" />
+					</c:url>
+					
 					<tr>
 						<td> ${tempTeacher.id} </td>
 						<td> ${tempTeacher.firstName} </td>
 						<td> ${tempTeacher.lastName} </td>
 						<td> ${tempTeacher.email} </td>
-						
-						<td>
-						<c:forEach var="tempTeacherCourseId" items="${tempTeacher.courseIds}">
-							| ${tempTeacherCourseId} |
-						</c:forEach>
-						</td>
-						
-						<td>
-						<c:forEach var="tempTeacherCourseName" items="${tempTeacher.courseNames}">
-							| ${tempTeacherCourseName} |
-						</c:forEach>
-						</td>
 						
 						<td> 
 							<a href="${tempLink}"> Update</a>
@@ -72,6 +63,8 @@
 							<a href="${deleteLink}"
 							onclick="if (!(confirm('Are you sure you want to delete this teacher?'))) return false">
 							Delete</a>
+							|
+							<a href="${viewCourseLink}"> View Course </a>
 						</td>
 					</tr>
 				

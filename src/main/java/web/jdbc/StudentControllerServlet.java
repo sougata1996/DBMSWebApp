@@ -71,6 +71,10 @@ public class StudentControllerServlet extends HttpServlet {
 				deleteStudent(request, response);
 				break;
 				
+			case "VIEW_COURSE":
+				viewStudentCourse(request, response);
+				break;
+				
 			default:
 				listStudents(request, response);
 			}
@@ -78,8 +82,18 @@ public class StudentControllerServlet extends HttpServlet {
 		}
 		catch (Exception exc) {
 			throw new ServletException(exc);
-		}	
-		
+		}		
+	}
+	
+	private void viewStudentCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String id = request.getParameter("studentId");
+		Student ob = StudentDbUtil.getStudentCourses(id);
+		// add students to the request
+		request.setAttribute("STUDENT_COURSE_LIST", ob);
+						
+		// send to JSP page (view)
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/view_student_course.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	private void deleteStudent(HttpServletRequest request, HttpServletResponse response) throws Exception {

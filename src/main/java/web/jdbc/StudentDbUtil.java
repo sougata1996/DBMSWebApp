@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -25,7 +27,15 @@ public class StudentDbUtil {
 	}
 	
 	public List<Student> getStudents() throws Exception {
-		List<Student> students = new ArrayList<>();
+		Map<Integer, List<Integer>> multiMap_1 = new HashMap<>();
+		List<Integer> courseIds = new ArrayList<>();
+		
+		Map<Integer, List<String>> multiMap_2 = new HashMap<>();
+		List<String> courseNames = new ArrayList<>();
+		
+		Map<Integer, Student> multiMap_3 = new HashMap<>();
+		
+		List<Student> res = new ArrayList<>();
 		
 		try {
 			// get a connection
@@ -47,22 +57,46 @@ public class StudentDbUtil {
 				String firstName = myRs.getString("first_name");
 				String lastName = myRs.getString("last_name");
 				String email = myRs.getString("email");
+				
 				int courseId = myRs.getInt("course_id");
 				String courseName = myRs.getNString("course_name");
 				
+				if (multiMap_1.containsKey(id) && multiMap_1.isEmpty() == false) {
+					courseIds.add(courseId);
+				}
+				else {
+					courseIds = new ArrayList<>();
+					courseIds.add(courseId);
+				}
+				
+				if (multiMap_2.containsKey(id) && multiMap_2.isEmpty() == false) {
+					courseNames.add(courseName);
+				}
+				else {
+					courseNames = new ArrayList<>();
+					courseNames.add(courseName);
+				}
+				
+				multiMap_1.put(id, courseIds);
+				multiMap_2.put(id, courseNames);
 				// create new student object
-				Student temp = new Student(id, firstName, lastName, email, courseId, courseName);
+				Student tempStudent = new Student(id, firstName, lastName, email, multiMap_1.get(id), multiMap_2.get(id));
 				
 				// add it to the list of students
-				students.add(temp);				
+				multiMap_3.put(id, tempStudent);
 			}
 			
-			return students;
+			for (Map.Entry<Integer, Student> entry : multiMap_3.entrySet()) {
+			    res.add(entry.getValue());
+			}
+			
+			return res;
 		}
+		
 		finally {
 			// close JDBC objects
 			close();
-		}
+		}		
 	}
 
 	private void close() {
@@ -88,17 +122,27 @@ public class StudentDbUtil {
 	public void addStudent(Student theStudent) throws Exception {
 		try {
 			myConn = dataSource.getConnection();
-			statement = myConn.prepareCall("{call insertStudentData(?,?,?,?)}");
+			statement = myConn.prepareCall("{call getAllStudentsData(?)}");
 			statement.setInt(1, theStudent.getId());
-			statement.setString(2, theStudent.getEmail());
-			statement.setString(3, theStudent.getFirstName());
-			statement.setString(4, theStudent.getLastName());
-			statement.execute();
+			myRs = statement.executeQuery();
 			
-			statement = myConn.prepareCall("{call insertStudentCourseData(?,?)}");
-			statement.setInt(1, theStudent.getId());
-			statement.setInt(2, theStudent.getCourseId());
-			statement.execute();
+			if (!myRs.next()) {
+				statement = myConn.prepareCall("{call insertStudentData(?,?,?,?)}");
+				statement.setInt(1, theStudent.getId());
+				statement.setString(2, theStudent.getEmail());
+				statement.setString(3, theStudent.getFirstName());
+				statement.setString(4, theStudent.getLastName());
+				statement.execute();
+			}
+			
+			List<Integer> courses = theStudent.getCourseIds();
+			for (int i=0; i<courses.size(); i++)
+			{
+				statement = myConn.prepareCall("{call insertStudentCourseData(?,?)}");
+				statement.setInt(1, theStudent.getId());
+				statement.setInt(2, theStudent.getCourseId(i));
+				statement.execute();
+			}
 			}
 			finally {
 				// close JDBC objects
@@ -159,5 +203,37 @@ public class StudentDbUtil {
 		
 		return theStudent;
 	}
+	
+	public Student getStudentCourses(String theStudentId) throws Exception {
 
+		try {
+			myConn = dataSource.getConnection();
+			statement = myConn.prepareCall("{call getAllStudentsData(?)}");
+			statement.setInt(1, Integer.parseInt(theStudentId));
+			myRs = statement.executeQuery();
+			int id, courseId;
+			id = courseId = 0;
+			String firstName, lastName, email ;
+			firstName = lastName = email = "";
+			List<Integer> courseIds = new ArrayList<>();
+			List<String> courseNames = new ArrayList<>();
+			while (myRs.next()) {
+				 id = myRs.getInt("id");
+				 firstName = myRs.getString("first_name");
+				 lastName = myRs.getString("last_name");
+				 email = myRs.getString("email");
+				 courseId = myRs.getInt("course_id");
+				String courseName = myRs.getString("course_name");
+				courseIds.add(courseId);
+				courseNames.add(courseName);
+			}
+
+			return new Student(id, firstName, lastName,email,courseIds, courseNames);
+			
+		}
+		finally {
+			// close JDBC objects
+			close();
+		}
+	}
 }

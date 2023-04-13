@@ -73,6 +73,10 @@ public class TeacherControllerServlet extends HttpServlet {
 				deleteTeacher(request, response);
 				break;
 				
+			case "VIEW_COURSE":
+				viewTeacherCourse(request, response);
+				break;
+				
 			default:
 				listTeachers(request, response);
 			}
@@ -82,6 +86,17 @@ public class TeacherControllerServlet extends HttpServlet {
 			throw new ServletException(exc);
 		}	
 		
+	}
+
+	private void viewTeacherCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String id = request.getParameter("teacherId");
+		Teacher ob = teacherDbUtil.getTeacherCourses(id);
+		// add students to the request
+		request.setAttribute("TEACHER_COURSE_LIST", ob);
+						
+		// send to JSP page (view)
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/view_teacher_course.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	private void deleteTeacher(HttpServletRequest request, HttpServletResponse response) throws Exception {
