@@ -74,6 +74,9 @@ public class StudentControllerServlet extends HttpServlet {
 			case "VIEW_COURSE":
 				viewStudentCourse(request, response);
 				break;
+			case "STUDENT_COURSE_LIST":
+				listStudentsInACourse(request, response);
+				break;
 				
 			default:
 				listStudents(request, response);
@@ -167,4 +170,20 @@ public class StudentControllerServlet extends HttpServlet {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/list-students.jsp");
 		dispatcher.forward(request, response);
 	}
+	private void listStudentsInACourse(HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+			String courseId = request.getParameter("courseId");
+			request.getSession().setAttribute("courseId", courseId);
+
+			// get students from db util
+			List<Student> Students = StudentDbUtil.getStudentsInACourse(
+					Integer.parseInt(courseId));
+			
+			// add students to the request
+			request.setAttribute("STUDENT_LIST", Students);
+					
+			// send to JSP page (view)
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/list-course-students.jsp");
+			dispatcher.forward(request, response);
+		}
 }

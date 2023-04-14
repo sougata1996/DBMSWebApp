@@ -55,7 +55,7 @@ FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCAD
 );
 
 create table results(
-score int not null,
+score int not null check (score between 0 and 100),
 eval_name varchar(50) not null,
 eval_type varchar(20) not null,
 course_id int not null,
@@ -296,4 +296,87 @@ new_eval_name varchar(200)
 begin
 update evaluation set eval_name = new_eval_name where teacher_id = teacherId and course_id = courseId and eval_name = old_eval_name and
 eval_type = evalType;
+update results set eval_name = new_eval_name where course_id = courseId and eval_name = old_eval_name and
+eval_type = evalType;
+end //
+
+delimiter //
+create procedure studentsInACourse(
+courseId int
+)
+begin 
+select * from Student 
+where Student.id in (select student_id from Student_Course where course_id = courseId);
+end //
+
+delimiter //
+create procedure viewResults(
+studentId int, 
+courseId int)
+begin
+select * from results where student_id = studentId and course_id = courseId;
+end //
+
+delimiter //
+create procedure addResult(
+Score int,
+evalName varchar(200),
+evalType varchar(200),
+courseId int,
+studentId int
+)
+begin
+insert into results values(Score, evalName, evalType, courseId, studentId);
+end //
+
+delimiter //
+create procedure updateResult(
+newScore int,
+evalName varchar(200),
+evalType varchar(200),
+courseId int,
+studentId int
+)
+begin
+update results set score = newScore where eval_name = evalName and eval_type = evalType and course_id = courseId and student_id = studentId;
+end //
+
+delimiter //
+create procedure deleteEvaluationForACourse(
+teacherId int,
+courseId int, 
+evalName varchar(200),
+evalType varchar(200)
+)
+begin 
+delete from evaluation where teacher_id = teacherId and course_id = courseId and eval_name = evalName and
+eval_type = evalType;
+delete from results where course_id = courseId and eval_name = evalName and
+eval_type = evalType;
+end //
+
+delimiter //
+create trigger validateResultInsertion 
+before insert on results 
+for each row
+begin
+declare exists_flag int;
+select count(*) into exists_flag from evaluation where course_id = new.course_id and eval_type = new.eval_type 
+and eval_name = new.eval_name;
+if(exists_flag = 0) then 
+signal sqlstate '45000'
+    set message_text = 'The entered Evaluation Name or/and Evaluation Type is/are not set for this course!'; 
+end if;
+end //
+
+delimiter //
+create procedure deleteResult(
+evalType varchar(200),
+evalName varchar(200),
+courseId int,
+studentId int
+)
+begin
+delete from results where eval_type = evalType and eval_name = evalName and
+course_id = courseId and student_id = studentId;
 end //

@@ -236,4 +236,27 @@ public class StudentDbUtil {
 			close();
 		}
 	}
+	public List<Student> getStudentsInACourse(int courseId) throws Exception {
+		List<Student> studentList = new ArrayList<>();
+		try {
+			myConn = dataSource.getConnection();
+			statement = myConn.prepareCall("{call studentsInACourse(?)}");
+			statement.setInt(1, courseId);
+			myRs = statement.executeQuery();
+			while (myRs.next()) {
+				int id = myRs.getInt("id");
+				 String firstName = myRs.getString("first_name");
+				 String lastName = myRs.getString("last_name");
+				 String email = myRs.getString("email");
+				Student student = new Student(id, firstName,
+						lastName, email);
+				studentList.add(student);
+			}
+	}
+		finally {
+			// close JDBC objects
+			close();
+		}
+		return studentList;
+	}
 }

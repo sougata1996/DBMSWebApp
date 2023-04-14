@@ -119,4 +119,34 @@
     <servlet-name>EvaluationControllerServlet</servlet-name>
     <url-pattern>/EvaluationControllerServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ViewResultsServlet</display-name>
+    <servlet-name>ViewResultsServlet</servlet-name>
+    <servlet-class>com.courses.ViewResultsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewResultsServlet</servlet-name>
+    <url-pattern>/ViewResultsServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ViewCoursesResultsServlet</display-name>
+    <servlet-name>ViewCoursesResultsServlet</servlet-name>
+    <servlet-class>com.results.ViewCoursesResultsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewCoursesResultsServlet</servlet-name>
+    <url-pattern>/ViewCoursesResultsServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ResultControllerServlet</display-name>
+    <servlet-name>ResultControllerServlet</servlet-name>
+    <servlet-class>com.results.ResultControllerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ResultControllerServlet</servlet-name>
+    <url-pattern>/ResultControllerServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
