@@ -2,7 +2,6 @@ CREATE DATABASE ScoresDB;
 
 use ScoresDB;
 
-DROP TABLE Teacher;
 CREATE TABLE Teacher (
 	  id INT PRIMARY KEY,
 	  first_name VARCHAR(50) NOT NULL,
@@ -11,7 +10,6 @@ CREATE TABLE Teacher (
 	  CONSTRAINT AK_Teacher_email UNIQUE (email)
 );
 
-DROP TABLE Student;
 CREATE TABLE Student (
 	  id INT PRIMARY KEY,
 	  first_name VARCHAR(50) NOT NULL,
@@ -20,7 +18,6 @@ CREATE TABLE Student (
 	  CONSTRAINT AK_Student_email UNIQUE (email)
 );
 
-DROP TABLE Course;
 CREATE TABLE Course (
 	id INT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -29,20 +26,21 @@ CREATE TABLE Course (
     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-DROP TABLE Student_Course;
 CREATE TABLE Student_Course (
   student_id INT NOT NULL,
   course_id INT NOT NULL,
   PRIMARY KEY (student_id, course_id),
-  FOREIGN KEY (student_id) REFERENCES Student(id),
-  FOREIGN KEY (course_id) REFERENCES Course(id)
+  FOREIGN KEY (student_id) REFERENCES Student(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-DROP TABLE admin_credentials;
 CREATE TABLE admin_credentials (
 	login_name VARCHAR(50) NOT NULL,
     pwd varbinary(200) NOT NULL
 );
+
+insert into admin_credentials(login_name, pwd) 
+values ("admin" , aes_encrypt('admin','admin'));
 
 CREATE TABLE EVALUATION (
 eval_name varchar(50) not null,
@@ -64,9 +62,6 @@ primary key (eval_name, eval_type, course_id, student_id),
 foreign key (student_id) references Student(id) on update cascade on delete cascade,
 FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
--- insert into admin_credentials(login_name, pwd) 
--- values ("admin" , aes_encrypt('admin','admin'));
 
 DELIMITER //
 CREATE PROCEDURE insertTeacherData(
