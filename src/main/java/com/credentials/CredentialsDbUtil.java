@@ -84,7 +84,26 @@ private DataSource dataSource;
 		finally {
 			close();
 		}
+	}	
+	public boolean validateStudentCredential(int id, String password) throws SQLException {
+		
+		try {
+			boolean myResult = false;
+			myConn = dataSource.getConnection();
+			statement = myConn.prepareCall("select validateStudentLogin(?, ?)");
+			statement.setInt(1, id);
+			statement.setString(2, password);
+			myRs = statement.executeQuery();
+			if (myRs.next()) {
+				   myResult = myRs.getBoolean(1);
+				}
+			return myResult;
+		}
+		finally {
+			close();
+		}
 	}
+	
 	private void close() {
 
 		try {

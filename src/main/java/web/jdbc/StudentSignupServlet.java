@@ -1,4 +1,4 @@
-package com.credentials;
+package web.jdbc;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.RequestDispatcher;
@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import javax.sql.DataSource;
+
+import com.credentials.CredentialsDbUtil;
 
 /**
  * Servlet implementation class StudentSignupServlet

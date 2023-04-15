@@ -56,7 +56,7 @@
 					
 						<td> ${tempResult.eval_type} </td>
 						<td> ${tempResult.eval_name} </td>
-						<td> ${tempResult.score} </td>
+						<td> ${tempResult.score}/100 </td>
 						<td> 
 							<a href="${updateLink}">Update</a>
 							<a href="${deleteLink}">Delete</a>

@@ -149,4 +149,14 @@
     <servlet-name>ResultControllerServlet</servlet-name>
     <url-pattern>/ResultControllerServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>StudentLoginServlet</display-name>
+    <servlet-name>StudentLoginServlet</servlet-name>
+    <servlet-class>com.students.StudentLoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>StudentLoginServlet</servlet-name>
+    <url-pattern>/StudentLoginServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -64,6 +64,8 @@ public class ResultControllerServlet extends HttpServlet {
 				updateResult(request, response);
 			case "DELETE":
 				deleteResult(request, response);
+			case "VIEW":
+				viewResult(request, response);
 			default:
 				listResults(request, response);
 			}
@@ -137,4 +139,15 @@ public class ResultControllerServlet extends HttpServlet {
 			throw new Exception(e);
 		}
 	}
+		private void viewResult(HttpServletRequest request, HttpServletResponse response) 
+				throws Exception {
+			List<Results> resultList = resultSet.getResultsFromAcourse(Integer.parseInt(request.getSession().getAttribute(
+					"studentId").toString()), Integer.parseInt(request.getParameter("courseId").toString()));
+		;
+		// add students to the request
+		request.setAttribute("result_list", resultList);
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/view-results.jsp");
+		dispatcher.forward(request, response);
+		}
 }
