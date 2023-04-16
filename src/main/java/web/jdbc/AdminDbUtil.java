@@ -7,9 +7,10 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.RequestDispatcher;
-
+/**
+ * Checks the admin credentials stored in the database
+ * If the credentials match we allow admin to login else we don't.
+ */
 public class AdminDbUtil {
 	
 	private DataSource dataSource;

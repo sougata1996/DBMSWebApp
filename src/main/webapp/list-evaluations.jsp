@@ -1,3 +1,5 @@
+<!-- View evaluation page added by teacher -->
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>

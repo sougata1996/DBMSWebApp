@@ -7,8 +7,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -120,26 +118,26 @@ public class TeacherControllerServlet extends HttpServlet {
 			list_2.add(Integer.parseInt(courseId.replaceAll("[^0-9]", "")));
 		}
 		
-		// create a new student object
+		// create a new teacher object
 		Teacher theTeacher = new Teacher(id, firstName, lastName, list, list_2);
 		
 		// perform update on database
 		teacherDbUtil.updateTeacher(theTeacher);
 		
-		// send them back to the "list students" page
+		// send them back to the "list teachers" page
 		listTeachers(request, response);
 	}
 
 	private void loadTeacher(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String theTeacherId = request.getParameter("teacherId");
 				
-		// get student from database (db util)
+		// get teacher from database (db util)
 		Teacher theTeacher = teacherDbUtil.getTeacher(Integer.parseInt(theTeacherId));
 		
-		// place student in the request attribute
+		// place teacher in the request attribute
 		request.setAttribute("THE_TEACHER", theTeacher);
 		
-		// send to jsp page: update-student-form.jsp
+		// send to jsp page: update-teacher-form.jsp
 		RequestDispatcher dispatcher = 
 				request.getRequestDispatcher("/update-teacher-form.jsp");
 		dispatcher.forward(request, response);		
@@ -156,10 +154,10 @@ public class TeacherControllerServlet extends HttpServlet {
 		
 		Teacher theTeacher = new Teacher(id, firstName, lastName, email, courseId, courseName);
 		
-		// add the student to the database
+		// add the teacher to the database
 		teacherDbUtil.addTeacher(theTeacher);
 		
-		// send back to main page (the student list)
+		// send back to main page (the teacher list)
 		try {
 			listTeachers(request, response);
 		} catch (Exception e) {
@@ -171,10 +169,10 @@ public class TeacherControllerServlet extends HttpServlet {
 	private void listTeachers(HttpServletRequest request, HttpServletResponse response) 
 		throws Exception {
 
-		// get students from db util
+		// get teachers from db util
 		List<Teacher> teachers = teacherDbUtil.getTeachers();
 		
-		// add students to the request
+		// add teachers to the request
 		request.setAttribute("TEACHER_LIST", teachers);
 				
 		// send to JSP page (view)

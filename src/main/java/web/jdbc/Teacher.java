@@ -3,6 +3,9 @@ package web.jdbc;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Stores the teacher information retrieved from the database.
+ */
 public class Teacher {
 
 	private int id;

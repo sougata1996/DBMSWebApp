@@ -1,6 +1,8 @@
 package com.credentials;
 
-
+/**
+ * Stores the student credentials in this class.
+ */
 public class StudentCredentials {
 private int id;
 private String password;

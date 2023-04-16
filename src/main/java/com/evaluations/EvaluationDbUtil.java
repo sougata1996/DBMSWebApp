@@ -10,6 +10,9 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+/**
+ * Class that interacts with the database to set evaluations, update and delete.
+ */
 public class EvaluationDbUtil {
 	
 private DataSource dataSource;

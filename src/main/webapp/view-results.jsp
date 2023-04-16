@@ -1,3 +1,5 @@
+<!-- Used by student to view results for a particular course -->
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>

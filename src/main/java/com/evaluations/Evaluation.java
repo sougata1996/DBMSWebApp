@@ -1,5 +1,8 @@
 package com.evaluations;
 
+/**
+ * Class to store the evaluation structure or info set by teacher.
+ */
 public class Evaluation {
 
 	private String eval_name;

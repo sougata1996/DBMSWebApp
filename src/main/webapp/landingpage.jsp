@@ -1,3 +1,5 @@
+<!-- Landing page for our app -->
+
 <html>
 <head>
     <title>Landing Page</title>

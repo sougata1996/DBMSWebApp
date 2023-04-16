@@ -2,9 +2,7 @@ package web.jdbc;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +11,9 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+/**
+ * Model class that interacts with the student database.
+ */
 public class StudentDbUtil {
 
 	private DataSource dataSource;

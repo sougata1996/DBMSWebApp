@@ -8,6 +8,10 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
+
+/**
+ * Inserts and validates the student and teacher credentials.
+ */
 public class CredentialsDbUtil {
 private DataSource dataSource;
 	

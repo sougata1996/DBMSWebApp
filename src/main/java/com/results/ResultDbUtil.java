@@ -11,6 +11,9 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+/**
+ * Class that interacts with the database to list, update, delete results
+ */
 public class ResultDbUtil {
 	private DataSource dataSource;
 

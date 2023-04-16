@@ -7,6 +7,9 @@ private String eval_type;
 private int course_id;
 private int student_id;
 
+/**
+ * Stores the results information.
+ */
 public Results(int score, String eval_name, String eval_type,
 		int course_id, int student_id) {
 	this.score = score;

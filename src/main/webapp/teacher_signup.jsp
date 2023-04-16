@@ -1,3 +1,5 @@
+<!-- Teacher signup page -->
+
 <!DOCTYPE html>
 <html>
   <head>

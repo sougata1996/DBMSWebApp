@@ -1,3 +1,5 @@
+<!-- Login response page for admin -->
+
 <html>
 
 <head>

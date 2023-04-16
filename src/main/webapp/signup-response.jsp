@@ -1,3 +1,5 @@
+<!-- Signup page -->
+
 <html>
 <head>
     <title>Signup Response</title>

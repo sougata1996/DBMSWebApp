@@ -7,14 +7,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 /**
- * Servlet implementation class StudentControllerServlet
+ * Servlet implementation class StudentControllerServlet.
+ * It acts as the controller and mediates calls between the DB Util and the JSP front end view.
  */
 public class StudentControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

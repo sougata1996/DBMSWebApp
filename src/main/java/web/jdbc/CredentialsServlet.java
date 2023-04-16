@@ -3,18 +3,18 @@ package web.jdbc;
 import jakarta.annotation.Resource;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 
 import javax.sql.DataSource;
 
 /**
- * Servlet implementation class CredentialsServlet
+ * Servlet implementation class CredentialsServlet.
+ * It acts as the controller in this MVC design.
+ * The servlet makes a call to the DB Util and forwards the response to the JSP
+ * via the request object.
  */
 public class CredentialsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

@@ -1,3 +1,5 @@
+<!-- View List of students after admin adds data -->
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>

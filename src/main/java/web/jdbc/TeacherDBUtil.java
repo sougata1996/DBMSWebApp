@@ -2,9 +2,7 @@ package web.jdbc;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +11,9 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+/**
+ * Model class that interacts with the teacher database.
+ */
 public class TeacherDBUtil {
 
 	private DataSource dataSource;
@@ -80,10 +81,10 @@ public class TeacherDBUtil {
 				
 				multiMap_1.put(id, courseIds);
 				multiMap_2.put(id, courseNames);
-				// create new student object
+				// create new teacher object
 				Teacher tempTeacher = new Teacher(id, firstName, lastName, email, multiMap_1.get(id), multiMap_2.get(id));
 				
-				// add it to the list of students
+				// add it to the list of teachers
 				multiMap_3.put(id, tempTeacher);
 			}
 			
