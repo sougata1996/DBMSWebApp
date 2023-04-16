@@ -22,6 +22,10 @@
 		<input type="button" value="Add Result" 
 	   onclick="window.location.href='add-result.jsp'; return false;"
 	   class="add-student-button"/>
+	   
+	   <input type="button" value="Back To Home" 
+	   	onclick="window.location.href='teacher_landingpage.jsp'; return false;"
+	   	class="add-student-button"/>
 		
 			<table>
 			
@@ -65,8 +69,13 @@
 				
 				</c:forEach>
 				
+				<tr>
+					<td colspan="2"></td> <!-- two empty cells to align with score column -->
+					<td><strong>Average Score: ${average}</strong></td> <!-- average score cell -->
+					<td></td> <!-- empty cell for the action column -->
+				</tr>
 			</table>
-		
+				
 		</div>
 	
 	</div>

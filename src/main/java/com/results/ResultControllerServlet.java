@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -85,11 +86,12 @@ public class ResultControllerServlet extends HttpServlet {
 		private void listResults(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
 
-			List<Results> resultList = resultSet.getResultsFromAcourse(Integer.parseInt(request.getSession().getAttribute(
+			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(Integer.parseInt(request.getSession().getAttribute(
 						"studentId").toString()), Integer.parseInt(request.getSession().getAttribute("courseId").toString()));
 			;
 			// add students to the request
-			request.setAttribute("result_list", resultList);
+			request.setAttribute("result_list", resultMap.get("results"));
+			request.setAttribute("average", resultMap.get("average"));
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/list-results.jsp");
 			dispatcher.forward(request, response);
@@ -141,11 +143,12 @@ public class ResultControllerServlet extends HttpServlet {
 	}
 		private void viewResult(HttpServletRequest request, HttpServletResponse response) 
 				throws Exception {
-			List<Results> resultList = resultSet.getResultsFromAcourse(Integer.parseInt(request.getSession().getAttribute(
+			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(Integer.parseInt(request.getSession().getAttribute(
 					"studentId").toString()), Integer.parseInt(request.getParameter("courseId").toString()));
 		;
 		// add students to the request
-		request.setAttribute("result_list", resultList);
+		request.setAttribute("result_list", resultMap.get("results"));
+		request.setAttribute("average", resultMap.get("average"));
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/view-results.jsp");
 		dispatcher.forward(request, response);

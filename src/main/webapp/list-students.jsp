@@ -23,8 +23,11 @@
 				
 				<input type="button" value="Add Student" 
 				   onclick="window.location.href='add-student-form.jsp'; return false;"
-				   class="add-student-button"
-			/>
+				   class="add-student-button"/>
+				   
+				   <input type="button" value="Back To Home" 
+	   					onclick="window.location.href='admin-login-response.jsp'; return false;"
+	   					class="add-student-button"/>
 			
 			<table>
 			

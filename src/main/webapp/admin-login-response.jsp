@@ -5,6 +5,18 @@
 	
 	<link type="text/css" rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<style>
+	/* Style for the link */
+	.link {
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  padding: 10px;
+	  text-decoration: none;
+	  color: #ffffff;
+	  background-color: #000000;
+	}
+	</style>
 </head>
 
 <body>
@@ -34,6 +46,6 @@
   </div>
 </div>
 
-
+<a href="landingpage.jsp" class="link">Log Out</a>
 </body>
 </html>

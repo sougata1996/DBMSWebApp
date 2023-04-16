@@ -2,6 +2,7 @@ CREATE DATABASE ScoresDB;
 
 use ScoresDB;
 
+-- Creates the teacher table
 CREATE TABLE Teacher (
 	  id INT PRIMARY KEY,
 	  first_name VARCHAR(50) NOT NULL,
@@ -10,6 +11,7 @@ CREATE TABLE Teacher (
 	  CONSTRAINT AK_Teacher_email UNIQUE (email)
 );
 
+-- Creates the student table
 CREATE TABLE Student (
 	  id INT PRIMARY KEY,
 	  first_name VARCHAR(50) NOT NULL,
@@ -18,6 +20,7 @@ CREATE TABLE Student (
 	  CONSTRAINT AK_Student_email UNIQUE (email)
 );
 
+-- Creates the teacher course table
 CREATE TABLE Course (
 	id INT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -26,6 +29,7 @@ CREATE TABLE Course (
     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+-- Creates the student course table
 CREATE TABLE Student_Course (
   student_id INT NOT NULL,
   course_id INT NOT NULL,
@@ -34,6 +38,9 @@ CREATE TABLE Student_Course (
   FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+-- Creates the admin credentials table.
+-- Data is already inserted into this table.
+-- See the insertion query below.
 CREATE TABLE admin_credentials (
 	login_name VARCHAR(50) NOT NULL,
     pwd varbinary(200) NOT NULL
@@ -42,6 +49,8 @@ CREATE TABLE admin_credentials (
 insert into admin_credentials(login_name, pwd) 
 values ("admin" , aes_encrypt('admin','admin'));
 
+-- Creates the evaluation table, the evaluation is set by teacher.
+-- Please take a look at the evaluation types set by a teacher for a particular course. 
 CREATE TABLE EVALUATION (
 eval_name varchar(50) not null,
 eval_type enum ('Homework', 'Project', 'Assignment', 'Mid Term', 'Final Term') not null,
@@ -52,6 +61,7 @@ foreign key (teacher_id) references Teacher(id) on update cascade on delete casc
 FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+-- Creates the results table.
 create table results(
 score int not null check (score between 0 and 100),
 eval_name varchar(50) not null,
@@ -63,6 +73,26 @@ foreign key (student_id) references Student(id) on update cascade on delete casc
 FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+-- Creates the student credential table.
+-- Note that student id is foreign key so it will throw an error,
+-- If we try to signup using an id that is not present in the student table
+-- That is if that id is not already added by the admin.
+create table student_credentials(
+id int unique not null,
+pwd varbinary(200) not null,
+foreign key (id) references Student(id) on update cascade on delete cascade
+);
+
+-- Creates the teacher credential table.
+-- Please read the comments of student_Credentials table.
+create table teacher_credentials(
+id int unique not null,
+pwd varbinary(200) not null,
+foreign key (id) references Teacher(id) on update cascade on delete cascade
+);
+
+-- Procedure to insert the teacher data.
+-- data is filled into the system by the admin.
 DELIMITER //
 CREATE PROCEDURE insertTeacherData(
     id_p INT,
@@ -75,7 +105,8 @@ CREATE PROCEDURE insertTeacherData(
 		VALUES (id_p, email_p, first_name_p, last_name_p);
 	END //
     
-    
+-- Procedure to insert the student data.
+-- data is filled into the system by the admin.    
 DELIMITER //
 CREATE PROCEDURE insertStudentData(
     id_p INT,
@@ -88,6 +119,9 @@ CREATE PROCEDURE insertStudentData(
 		VALUES (id_p, email_p, first_name_p, last_name_p);
 	END //
     
+-- Insert the teacher course data.
+-- This data is filled by the admin, 
+-- This contains the mapping between the teacher and the courses he/she teaches.
 DELIMITER //
 CREATE PROCEDURE insertTeacherCourseData(
     id_p INT,
@@ -99,6 +133,9 @@ CREATE PROCEDURE insertTeacherCourseData(
 		VALUES (id_p, name_p, tecaher_id_p);
 END //
 
+-- Insert the student course data.
+-- This data is filled by the admin, 
+-- This contains the mapping between the student and the courses he/she takes.
 DELIMITER //
 CREATE PROCEDURE insertStudentCourseData(
     student_id_p INT,
@@ -109,6 +146,9 @@ CREATE PROCEDURE insertStudentCourseData(
 		VALUES (student_id_p, course_id_p);
 END //
 
+-- Gets the teacher course data, with the mapping or association between the teacher and the courses.
+-- This data is used to display in the UI. 
+-- Please take a look at teacher_landingpage.jsp to know how it is used.
 DELIMITER //
 CREATE PROCEDURE viewTeacherCourseData()
 	BEGIN
@@ -118,6 +158,8 @@ CREATE PROCEDURE viewTeacherCourseData()
         ORDER BY t.id;
 END //
 
+-- Gets the student course data, with the mapping or association between the student and the courses.
+-- This data is used to display in the UI. 
 DELIMITER //
 CREATE PROCEDURE viewStudentCourseData()
 	BEGIN
@@ -128,6 +170,7 @@ CREATE PROCEDURE viewStudentCourseData()
         ORDER BY s.id;
 END //
 
+-- The procedure gets all the information about a particular teacher.
 DELIMITER //
 CREATE PROCEDURE getAllTeachersData(id INT)
 	BEGIN
@@ -136,6 +179,7 @@ CREATE PROCEDURE getAllTeachersData(id INT)
         LEFT JOIN Course c ON c.teacher_id = t.id WHERE t.id = id;
 END //
 
+-- The procedure gets all the information about a particular student.
 DELIMITER //
 CREATE PROCEDURE getAllStudentsData(id INT)
 	BEGIN
@@ -146,6 +190,7 @@ CREATE PROCEDURE getAllStudentsData(id INT)
         WHERE s.id = id;
 END //
 
+-- This procedure updates the teacher info.
 DELIMITER //
 CREATE PROCEDURE updateTeacher(
 	id_p INT,
@@ -162,6 +207,7 @@ CREATE PROCEDURE updateTeacher(
 			c.name = name_p WHERE t.id = id_p AND c.id = course_id_p;
 END //
 
+-- This procedure updates the student info.
 DELIMITER //
 CREATE PROCEDURE updateStudent(
 	id_p INT,
@@ -175,6 +221,8 @@ CREATE PROCEDURE updateStudent(
             WHERE s.id = id_p;
 END //
 
+-- This procedure deletes the teacher info from Database.
+-- before deleting the tecaher we make sure to delete the courses he/she teaches.
 DELIMITER //
 CREATE PROCEDURE deleteTeacher(
 	id_p INT
@@ -184,6 +232,8 @@ CREATE PROCEDURE deleteTeacher(
 		DELETE FROM teacher WHERE id = id_p;
 END //
 
+-- This procedure deletes the student info from Database.
+-- before deleting the tecaher we make sure to delete the courses he/she takes.
 DELIMITER //
 CREATE PROCEDURE deleteStudent(
 	id_p INT
@@ -193,6 +243,7 @@ CREATE PROCEDURE deleteStudent(
 		DELETE FROM student WHERE id = id_p;
 END //
 
+-- Reads the admin credentials from DB.
 DELIMITER //
 CREATE FUNCTION readAdminCredentials(userId VARCHAR(50), passCode VARCHAR(200))
 RETURNS BOOLEAN
@@ -211,18 +262,7 @@ BEGIN
 	END IF;
 END //
 
-create table student_credentials(
-id int unique not null,
-pwd varbinary(200) not null,
-foreign key (id) references Student(id) on update cascade on delete cascade
-);
-
-create table teacher_credentials(
-id int unique not null,
-pwd varbinary(200) not null,
-foreign key (id) references Teacher(id) on update cascade on delete cascade
-);
-
+-- Inserts the student login info during signup of student.
 delimiter //
 create procedure insertStudentLogin(
 newId int, 
@@ -233,6 +273,7 @@ insert into student_credentials values(newId, pwd);
 select * from student_credentials where id = newId;
 end //
 
+-- Inserts the teacher login info during signup of teacher.
 delimiter //
 create procedure insertTeacherLogin(
 newId int, 
@@ -243,6 +284,7 @@ insert into teacher_credentials values(newId, pwd);
 select * from teacher_credentials where id = newId;
 end //
 
+-- Same as admin login, we are doing teacher login validation here.
 delimiter //
 create function validateTeacherLogin(userId VARCHAR(50), passCode varchar(200))
 returns boolean
@@ -259,6 +301,24 @@ begin
 	end if;
 end //
 
+-- Same as admin login, we are doing teacher login validation here.
+delimiter //
+create function validateStudentLogin(userId VARCHAR(50), passCode varchar(200))
+returns boolean
+reads sql data
+begin
+	declare res_pwd varchar(200);
+    
+    select cast(pwd as char character set utf8) into res_pwd from student_credentials where id = userId;
+    if res_pwd = passCode then
+		return true;
+	else
+		return false;
+        
+	end if;
+end //
+
+-- This procedure is used to display the evaluations set by the teacher.
 delimiter //
 create procedure viewEvaluations(
 teacherId int, 
@@ -267,6 +327,7 @@ begin
 select * from evaluation where teacher_id = teacherId and course_id = courseId;
 end //
 
+-- This procedure is used to add more evaluations to a course by the teacher.
 delimiter //
 create procedure addEvaluationForACourse(
 teacher_id int, 
@@ -279,7 +340,7 @@ insert into evaluation values (eval_name, eval_type,teacher_id, course_id);
 select * from evaluation where teacher_id = teacher_id;
 end //
 
-
+-- This procedure is used to update evaluations.
 delimiter //
 create procedure updateEvaluationForACourse(
 teacherId int,
@@ -295,6 +356,7 @@ update results set eval_name = new_eval_name where course_id = courseId and eval
 eval_type = evalType;
 end //
 
+-- Gets info. of all the students that have taken up a particlar course.
 delimiter //
 create procedure studentsInACourse(
 courseId int
@@ -304,6 +366,7 @@ select * from Student
 where Student.id in (select student_id from Student_Course where course_id = courseId);
 end //
 
+-- Views results of a particular student for a particular course.
 delimiter //
 create procedure viewResults(
 studentId int, 
@@ -312,6 +375,7 @@ begin
 select * from results where student_id = studentId and course_id = courseId;
 end //
 
+-- Adds results for students.
 delimiter //
 create procedure addResult(
 Score int,
@@ -324,6 +388,7 @@ begin
 insert into results values(Score, evalName, evalType, courseId, studentId);
 end //
 
+-- Updates results for students.
 delimiter //
 create procedure updateResult(
 newScore int,
@@ -336,6 +401,7 @@ begin
 update results set score = newScore where eval_name = evalName and eval_type = evalType and course_id = courseId and student_id = studentId;
 end //
 
+-- Deletes evaluation set for a course.
 delimiter //
 create procedure deleteEvaluationForACourse(
 teacherId int,
@@ -350,6 +416,7 @@ delete from results where course_id = courseId and eval_name = evalName and
 eval_type = evalType;
 end //
 
+-- Validation of the set results.
 delimiter //
 create trigger validateResultInsertion 
 before insert on results 
@@ -364,6 +431,7 @@ signal sqlstate '45000'
 end if;
 end //
 
+-- Deletes result.
 delimiter //
 create procedure deleteResult(
 evalType varchar(200),

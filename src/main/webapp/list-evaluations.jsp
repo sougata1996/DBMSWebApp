@@ -22,6 +22,10 @@
 		<input type="button" value="Add Evaluation" 
 	   onclick="window.location.href='add-evaluation.jsp'; return false;"
 	   class="add-student-button"/>
+	   
+	   <input type="button" value="Back To Home" 
+	   	onclick="window.location.href='teacher_landingpage.jsp'; return false;"
+	   	class="add-student-button"/>
 		
 			<table>
 			

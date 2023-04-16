@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -21,29 +23,39 @@ public class ResultDbUtil {
 		dataSource = theDataSource;
 	}
 	
-	public List<Results> getResultsFromAcourse(int student_id, int course_id) throws Exception{
-		List<Results> results = new ArrayList<>();
-		try {
-			myConn = dataSource.getConnection();
-			String sql = "call viewResults(?, ?)";
-			statement = myConn.prepareCall(sql);
-			statement.setInt(1, student_id);
-			statement.setInt(2, course_id);
-			myRs = statement.executeQuery();
-			while(myRs.next()) {
-				int score = myRs.getInt("score");
-				String eval_name = myRs.getString("eval_name");
-				String eval_type = myRs.getString("eval_type");
-				Results result = new Results(score, eval_name, eval_type,
-						student_id, course_id);
-				results.add(result);
-			}
-		return results;
-		}
-		finally {
-			// close JDBC objects
-			close();
-		}		
+	public Map<String, Object> getResultsAndAverageFromAcourse(int student_id, int course_id) throws Exception{
+	    Map<String, Object> resultAndAverage = new HashMap<>();
+	    List<Results> results = new ArrayList<>();
+	    int sum = 0;
+	    int count = 0;
+	    try {
+	        myConn = dataSource.getConnection();
+	        String sql = "call viewResults(?, ?)";
+	        statement = myConn.prepareCall(sql);
+	        statement.setInt(1, student_id);
+	        statement.setInt(2, course_id);
+	        myRs = statement.executeQuery();
+	        while(myRs.next()) {
+	            count ++;
+	            int score = myRs.getInt("score");
+	            sum += score;
+	            String eval_name = myRs.getString("eval_name");
+	            String eval_type = myRs.getString("eval_type");
+	            Results result = new Results(score, eval_name, eval_type,
+	                    student_id, course_id);
+	            results.add(result);
+	        }
+	        if(count > 0) {
+	            double average = (double)sum / count;
+	            resultAndAverage.put("average", average);
+	        }
+	        resultAndAverage.put("results", results);
+	        return resultAndAverage;
+	    }
+	    finally {
+	        // close JDBC objects
+	        close();
+	    }		
 	}
 	
 	public void addResult(int score, String eval_name, String eval_type, 

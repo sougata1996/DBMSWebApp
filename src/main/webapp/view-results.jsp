@@ -19,32 +19,40 @@
 	
 		<div id="content">
 		
-			<table>
-			
-				<tr>
-					<th>Evaluation Type</th>
-					<th>Evaluation Name</th>
-					<th>Score</th>
-					
-				</tr>
+			<div class="table-container">
+				<table>
 				
-				<c:forEach var="tempResult" items="${result_list}">
+					<tr>
+						<th>Evaluation Type</th>
+						<th>Evaluation Name</th>
+						<th>Score</th>
+						
+					</tr>
+					
+					<c:forEach var="tempResult" items="${result_list}">
+						
+						<tr>
+						
+							<td> ${tempResult.eval_type} </td>
+							<td> ${tempResult.eval_name} </td>
+							<td> ${tempResult.score}/100 </td>
+						</tr>
+					
+					</c:forEach>
 					
 					<tr>
-					
-						<td> ${tempResult.eval_type} </td>
-						<td> ${tempResult.eval_name} </td>
-						<td> ${tempResult.score}/100 </td>
+						<td colspan="2"></td> <!-- two empty cells to align with score column -->
+						<td><strong>Average Score: ${average}</strong></td> <!-- average score cell -->
+						<td></td> <!-- empty cell for the action column -->
 					</tr>
+					
+				</table>
 				
-				</c:forEach>
-				
-			</table>
+			</div>
 		
 		</div>
 	
 	</div>
 </body>
-
 
 </html>

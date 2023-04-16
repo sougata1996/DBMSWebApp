@@ -9,7 +9,7 @@
   <body>
   <div id="wrapper">
 		<div id="header">
-			<h2>Northeastern University!</h2>
+			<h2>Score Management App!</h2>
 		</div>
 	</div>
 	
