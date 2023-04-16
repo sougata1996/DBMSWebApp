@@ -82,12 +82,15 @@ public class StudentControllerServlet extends HttpServlet {
 			}
 				
 		}
-		catch (Exception exc) {
-			throw new ServletException(exc);
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}		
 	}
 	
 	private void viewStudentCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
 		String id = request.getParameter("studentId");
 		Student ob = StudentDbUtil.getStudentCourses(id);
 		// add students to the request
@@ -96,15 +99,29 @@ public class StudentControllerServlet extends HttpServlet {
 		// send to JSP page (view)
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/view_student_course.jsp");
 		dispatcher.forward(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 
 	private void deleteStudent(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
 		int id = Integer.parseInt(request.getParameter("studentId"));
 		StudentDbUtil.deleteStudent(id);
 		listStudents(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 
 	private void updateStudent(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
 		int id = Integer.parseInt(request.getParameter("studentId"));
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
@@ -117,9 +134,16 @@ public class StudentControllerServlet extends HttpServlet {
 		
 		// send them back to the "list students" page
 		listStudents(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 
 	private void loadStudent(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
 		String theStudentId = request.getParameter("studentId");
 				
 		// get student from database (db util)
@@ -131,11 +155,18 @@ public class StudentControllerServlet extends HttpServlet {
 		// send to jsp page: update-student-form.jsp
 		RequestDispatcher dispatcher = 
 				request.getRequestDispatcher("/update-student-form.jsp");
-		dispatcher.forward(request, response);		
+		dispatcher.forward(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 
 	private void addStudents(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		try {
 		int id = Integer.parseInt(request.getParameter("Id"));
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
@@ -148,17 +179,17 @@ public class StudentControllerServlet extends HttpServlet {
 		StudentDbUtil.addStudent(theStudent);
 		
 		// send back to main page (the student list)
-		try {
-			listStudents(request, response);
+		listStudents(request, response);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		    request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}
 	}
 
 	private void listStudents(HttpServletRequest request, HttpServletResponse response) 
 		throws Exception {
-
+		try {
 		// get students from db util
 		List<Student> Students = StudentDbUtil.getStudents();
 		
@@ -168,9 +199,16 @@ public class StudentControllerServlet extends HttpServlet {
 		// send to JSP page (view)
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/list-students.jsp");
 		dispatcher.forward(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 	private void listStudentsInACourse(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
+		try {
 			String courseId = request.getParameter("courseId");
 			request.getSession().setAttribute("courseId", courseId);
 
@@ -185,4 +223,10 @@ public class StudentControllerServlet extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/list-course-students.jsp");
 			dispatcher.forward(request, response);
 		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
+	}
 }

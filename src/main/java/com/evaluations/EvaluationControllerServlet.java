@@ -71,8 +71,10 @@ public class EvaluationControllerServlet extends HttpServlet {
 				listEvaluation(request, response);
 			}
 		}
-		catch (Exception exc) {
-			throw new ServletException(exc);
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}		
 	}
 
@@ -85,23 +87,25 @@ public class EvaluationControllerServlet extends HttpServlet {
 	}
 	private void addEvaluation(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		try {
 		String eval_type = request.getParameter("eval_type");
 		String eval_name = request.getParameter("eval_name");
 		int teacher_id = Integer.parseInt(request.getSession().getAttribute("teacherId").toString());
 		int courseId = Integer.parseInt(request.getSession().getAttribute("courseId").toString());
 		
 		evaluation.addEvaluationForACourse(eval_name, eval_type, teacher_id, courseId);
-		try {
-			listEvaluation(request, response);
+		listEvaluation(request, response);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}
 	}
 
 	private void listEvaluation(HttpServletRequest request, HttpServletResponse response) 
 		throws Exception {
 
+		try {
 		// get students from db util
 		List<Evaluation> evaluations = evaluation.getEvaluations(Integer.parseInt(request.getSession().getAttribute("teacherId").toString()),
 				Integer.parseInt(request.getSession().getAttribute("courseId").toString()));
@@ -112,9 +116,16 @@ public class EvaluationControllerServlet extends HttpServlet {
 		// send to JSP page (view)
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/list-evaluations.jsp");
 		dispatcher.forward(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 	private void loadEvaluation(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
+		try {
 		Evaluation eval = new Evaluation(Integer.parseInt(request.getParameter("teacher_id")),Integer.parseInt(request.getParameter("course_id")),
 				request.getParameter("eval_name"),request.getParameter("eval_type"));
 		
@@ -123,11 +134,16 @@ public class EvaluationControllerServlet extends HttpServlet {
 		RequestDispatcher dispatcher = 
 				request.getRequestDispatcher("/update-evaluations.jsp");
 		dispatcher.forward(request, response);		
-	
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 	private void updateEvaluation(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
-		
+		try {
 		int teacher_id = Integer.parseInt(request.getSession().getAttribute("teacherId").toString());
 		int course_id = Integer.parseInt(request.getSession().getAttribute("courseId").toString());
 		String old_eval_name = request.getParameter("old_eval_name");
@@ -137,10 +153,16 @@ public class EvaluationControllerServlet extends HttpServlet {
 		evaluation.updateEvaluationForACourse(teacher_id, course_id, old_eval_name, eval_type, new_eval_name);
 		 
 		listEvaluation(request, response);
-	
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 	private void deleteEvaluation(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
+		try {
 		int teacher_id = Integer.parseInt(request.getSession().getAttribute("teacherId").toString());
 		int course_id = Integer.parseInt(request.getSession().getAttribute("courseId").toString());
 		String eval_type = request.getParameter("eval_type");
@@ -149,6 +171,11 @@ public class EvaluationControllerServlet extends HttpServlet {
 		evaluation.deleteEvaluationForACourse(teacher_id, course_id, eval_name, eval_type);
 		
 		listEvaluation(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 }
-

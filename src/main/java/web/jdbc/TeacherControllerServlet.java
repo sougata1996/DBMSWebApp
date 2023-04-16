@@ -80,13 +80,16 @@ public class TeacherControllerServlet extends HttpServlet {
 			}
 				
 		}
-		catch (Exception exc) {
-			throw new ServletException(exc);
-		}	
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 		
 	}
 
 	private void viewTeacherCourse(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
 		String id = request.getParameter("teacherId");
 		Teacher ob = teacherDbUtil.getTeacherCourses(id);
 		// add students to the request
@@ -95,15 +98,29 @@ public class TeacherControllerServlet extends HttpServlet {
 		// send to JSP page (view)
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/view_teacher_course.jsp");
 		dispatcher.forward(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 
 	private void deleteTeacher(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
 		int id = Integer.parseInt(request.getParameter("teacherId"));
 		teacherDbUtil.deleteTeacher(id);
 		listTeachers(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 
 	private void updateTeacher(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
 		int id = Integer.parseInt(request.getParameter("teacherId"));
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
@@ -126,9 +143,16 @@ public class TeacherControllerServlet extends HttpServlet {
 		
 		// send them back to the "list teachers" page
 		listTeachers(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 
 	private void loadTeacher(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
 		String theTeacherId = request.getParameter("teacherId");
 				
 		// get teacher from database (db util)
@@ -140,11 +164,17 @@ public class TeacherControllerServlet extends HttpServlet {
 		// send to jsp page: update-teacher-form.jsp
 		RequestDispatcher dispatcher = 
 				request.getRequestDispatcher("/update-teacher-form.jsp");
-		dispatcher.forward(request, response);		
+		dispatcher.forward(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 
 	private void addTeachers(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+		try {
 		int id = Integer.parseInt(request.getParameter("Id"));
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
@@ -158,17 +188,17 @@ public class TeacherControllerServlet extends HttpServlet {
 		teacherDbUtil.addTeacher(theTeacher);
 		
 		// send back to main page (the teacher list)
-		try {
 			listTeachers(request, response);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}
 	}
 
 	private void listTeachers(HttpServletRequest request, HttpServletResponse response) 
 		throws Exception {
-
+		try {
 		// get teachers from db util
 		List<Teacher> teachers = teacherDbUtil.getTeachers();
 		
@@ -178,5 +208,11 @@ public class TeacherControllerServlet extends HttpServlet {
 		// send to JSP page (view)
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/list-teachers.jsp");
 		dispatcher.forward(request, response);
+		}
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
+		}
 	}
 }

@@ -3,6 +3,7 @@ package web.jdbc;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.sql.DataSource;
@@ -39,6 +40,9 @@ public class AdminDbUtil {
 			}
 			
 			}
+		catch (SQLException e) {
+			throw new SQLException("An error while checking admin credentials.", e.getMessage());
+		}
 			finally {
 				close();
 			}

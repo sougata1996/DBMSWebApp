@@ -66,8 +66,10 @@ public class ResultControllerServlet extends HttpServlet {
 				listResults(request, response);
 			}
 		}
-		catch (Exception exc) {
-			throw new ServletException(exc);
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}		
 	}
 
@@ -80,7 +82,7 @@ public class ResultControllerServlet extends HttpServlet {
 		}
 		private void listResults(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
-
+			try {
 			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(Integer.parseInt(request.getSession().getAttribute(
 						"studentId").toString()), Integer.parseInt(request.getSession().getAttribute("courseId").toString()));
 			;
@@ -90,10 +92,17 @@ public class ResultControllerServlet extends HttpServlet {
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/list-results.jsp");
 			dispatcher.forward(request, response);
+			}
+			catch (Exception e) {
+				request.setAttribute("exception", e);
+			    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+			    dispatcher.forward(request, response);
+			}
 		}
 		
 		private void loadResult(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
+			try {
 		Results result = new Results(Integer.parseInt(request.getParameter("score").toString()),
 				request.getParameter("eval_name"),request.getParameter("eval_type"),
 				Integer.parseInt(request.getSession().getAttribute("courseId").toString()),
@@ -102,24 +111,44 @@ public class ResultControllerServlet extends HttpServlet {
 		RequestDispatcher dispatcher = 
 				request.getRequestDispatcher("/update-result.jsp");
 		dispatcher.forward(request, response);
+			}
+			catch (Exception e) {
+				request.setAttribute("exception", e);
+			    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+			    dispatcher.forward(request, response);
+			}
 		}	
 		
 		private void updateResult(HttpServletRequest request, HttpServletResponse response) 
 				throws Exception {
+			try {
 			resultSet.updateResult(Integer.parseInt(request.getParameter("new_score").toString()),
 					request.getParameter("eval_name"), request.getParameter("eval_type"), 
 					Integer.parseInt(request.getSession().getAttribute("courseId").toString()),
 					Integer.parseInt(request.getSession().getAttribute("studentId").toString()));
 			listResults(request, response);
+			}
+			catch (Exception e) {
+				request.setAttribute("exception", e);
+			    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+			    dispatcher.forward(request, response);
+			}
 		}
 		
 		private void deleteResult(HttpServletRequest request, HttpServletResponse response) 
 				throws Exception {
+			try {
 			resultSet.deleteResult(request.getParameter("eval_type"),
 					request.getParameter("eval_name"),
 					Integer.parseInt(request.getSession().getAttribute("courseId").toString()),
 					Integer.parseInt(request.getSession().getAttribute("studentId").toString()));
 			listResults(request, response);
+			}
+			catch (Exception e) {
+				request.setAttribute("exception", e);
+			    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+			    dispatcher.forward(request, response);
+			}
 		}
 		private void addResult(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
@@ -132,20 +161,28 @@ public class ResultControllerServlet extends HttpServlet {
 		resultSet.addResult(score, eval_name, eval_type, course_id, student_id);
 		listResults(request, response);
 		}
-		catch(Exception e) {
-			throw new Exception(e);
+		catch (Exception e) {
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}
 	}
 		private void viewResult(HttpServletRequest request, HttpServletResponse response) 
 				throws Exception {
+			try {
 			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(Integer.parseInt(request.getSession().getAttribute(
 					"studentId").toString()), Integer.parseInt(request.getParameter("courseId").toString()));
-		;
-		// add students to the request
-		request.setAttribute("result_list", resultMap.get("results"));
-		request.setAttribute("average", resultMap.get("average"));
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/view-results.jsp");
-		dispatcher.forward(request, response);
+			// add students to the request
+			request.setAttribute("result_list", resultMap.get("results"));
+			request.setAttribute("average", resultMap.get("average"));
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/view-results.jsp");
+			dispatcher.forward(request, response);
+			}
+			catch (Exception e) {
+				request.setAttribute("exception", e);
+			    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+			    dispatcher.forward(request, response);
+			}
 		}
 }

@@ -57,9 +57,9 @@ public class CredentialsServlet extends HttpServlet {
 				dispatcher.forward(request, response);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			 // Write the plain text to the PrintStream
-	        //printStream.println(e.getMessage());
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}
 
 	}

@@ -45,8 +45,9 @@ public class ViewCoursesResultsServlet extends HttpServlet {
 			request.setAttribute("courseId_list", teacher.getCourseIds());
 			request.setAttribute("courseName_list", teacher.getCourseNames());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}
 				
 		// send to JSP page (view)

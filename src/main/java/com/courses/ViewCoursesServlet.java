@@ -27,7 +27,6 @@ public class ViewCoursesServlet extends HttpServlet {
      */
     public ViewCoursesServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -44,8 +43,9 @@ public class ViewCoursesServlet extends HttpServlet {
 			request.setAttribute("courseId_list", teacher.getCourseIds());
 			request.setAttribute("courseName_list", teacher.getCourseNames());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			request.setAttribute("exception", e);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/error.jsp");
+		    dispatcher.forward(request, response);
 		}
 				
 		// send to JSP page (view)
@@ -57,7 +57,6 @@ public class ViewCoursesServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
