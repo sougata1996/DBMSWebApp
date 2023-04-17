@@ -443,3 +443,15 @@ begin
 delete from results where eval_type = evalType and eval_name = evalName and
 course_id = courseId and student_id = studentId;
 end //
+
+-- Filters results based on evaluation type
+delimiter //
+create procedure filterResults(
+evalType varchar(200),
+courseId int,
+studentId int
+)
+begin
+select * from results where eval_type = evalType and
+course_id = courseId and student_id = studentId;
+end //

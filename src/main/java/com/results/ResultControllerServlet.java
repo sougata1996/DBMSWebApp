@@ -46,6 +46,9 @@ public class ResultControllerServlet extends HttpServlet {
 			if(request.getParameter("studentId")!=null) {
 				request.getSession().setAttribute("studentId", request.getParameter("studentId"));
 			}
+			if(request.getParameter("courseId")!=null) {
+				request.getSession().setAttribute("courseId", request.getParameter("courseId"));
+			}
 			// route to the appropriate method
 			switch (theCommand) {
 			
@@ -62,6 +65,7 @@ public class ResultControllerServlet extends HttpServlet {
 				deleteResult(request, response);
 			case "VIEW":
 				viewResult(request, response);
+			
 			default:
 				listResults(request, response);
 			}
@@ -83,7 +87,8 @@ public class ResultControllerServlet extends HttpServlet {
 		private void listResults(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
 			try {
-			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(Integer.parseInt(request.getSession().getAttribute(
+				String eval_type = "";
+			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(eval_type,Integer.parseInt(request.getSession().getAttribute(
 						"studentId").toString()), Integer.parseInt(request.getSession().getAttribute("courseId").toString()));
 			;
 			// add students to the request
@@ -170,8 +175,13 @@ public class ResultControllerServlet extends HttpServlet {
 		private void viewResult(HttpServletRequest request, HttpServletResponse response) 
 				throws Exception {
 			try {
-			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(Integer.parseInt(request.getSession().getAttribute(
-					"studentId").toString()), Integer.parseInt(request.getParameter("courseId").toString()));
+
+				String eval_type = "";
+				if(request.getParameter("eval_type")!=null) {
+					eval_type = request.getParameter("eval_type");
+				}
+			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(eval_type,Integer.parseInt(request.getSession().getAttribute(
+					"studentId").toString()), Integer.parseInt(request.getSession().getAttribute("courseId").toString()));
 			// add students to the request
 			request.setAttribute("result_list", resultMap.get("results"));
 			request.setAttribute("average", resultMap.get("average"));

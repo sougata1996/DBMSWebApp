@@ -26,17 +26,27 @@ public class ResultDbUtil {
 		dataSource = theDataSource;
 	}
 	
-	public Map<String, Object> getResultsAndAverageFromAcourse(int student_id, int course_id) throws Exception{
+	public Map<String, Object> getResultsAndAverageFromAcourse(String evalType,
+			int student_id, int course_id) throws Exception{
 	    Map<String, Object> resultAndAverage = new HashMap<>();
 	    List<Results> results = new ArrayList<>();
 	    int sum = 0;
 	    int count = 0;
 	    try {
 	        myConn = dataSource.getConnection();
+	        if(evalType.equals("")) {
 	        String sql = "call viewResults(?, ?)";
 	        statement = myConn.prepareCall(sql);
 	        statement.setInt(1, student_id);
 	        statement.setInt(2, course_id);
+	        }
+	        else {
+	        	String sql = "call filterResults(?,?,?)";
+		        statement = myConn.prepareCall(sql);
+		        statement.setString(1, evalType);
+		        statement.setInt(2, course_id);
+		        statement.setInt(3, student_id);
+	        }
 	        myRs = statement.executeQuery();
 	        while(myRs.next()) {
 	            count ++;

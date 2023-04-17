@@ -20,7 +20,27 @@
 	<div id="container">
 	
 		<div id="content">
-		
+		<form id="form" action="ResultControllerServlet" method="GET">
+  				<select id="eval_type" name="Evaluation Type" onchange="redirectToServlet(this.value)">
+   					<option value="Homework" <% if ("Homework".equals(request.getParameter("eval_type"))) { out.print("selected"); } %>>Homework</option>
+    				<option value="Project" <% if ("Project".equals(request.getParameter("eval_type"))) { out.print("selected"); } %>>Project</option>
+    				<option value="Assignment" <% if ("Assignment".equals(request.getParameter("eval_type"))) { out.print("selected"); } %>>Assignment</option>
+    				<option value="Mid Term" <% if ("Mid Term".equals(request.getParameter("eval_type"))) { out.print("selected"); } %>>Mid Term</option>
+    				<option value="Final Term" <% if ("Final Term".equals(request.getParameter("eval_type"))) { out.print("selected"); } %>>Final Term</option>
+  				</select>
+		</form>
+		<script>
+  			function redirectToServlet(selectedValue) {
+    		var servletUrl = "ResultControllerServlet";
+    		var queryParam = "?eval_type=" + encodeURIComponent(selectedValue) + "&command=VIEW";
+    		var fullUrl = servletUrl + queryParam;
+    		window.location.href = fullUrl;
+  			}
+		</script>
+		<form action="ResultControllerServlet" method="GET">
+		<button type="submit">Clear</button>
+				   <input type="hidden" name="command" value=VIEW />
+		</form>
 			<div class="table-container">
 				<table>
 				
