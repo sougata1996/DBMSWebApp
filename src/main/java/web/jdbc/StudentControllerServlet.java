@@ -206,6 +206,7 @@ public class StudentControllerServlet extends HttpServlet {
 		    dispatcher.forward(request, response);
 		}
 	}
+	
 	private void listStudentsInACourse(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
 		try {
