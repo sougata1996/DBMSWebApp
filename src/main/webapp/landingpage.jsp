@@ -17,7 +17,7 @@
 	
 	<div class="d-flex flex-row">
 		<div class="card" style="width: 18rem;">
-		  	<img src="images/student.png" class="card-img-top" height="200" width="300">
+		  	<img src="images/admin.jpeg" class="card-img-top" height="200" width="300">
 	  		<div class="card-body">
 	    		<h5 class="card-title">Login As Admin</h5>
 	    		<a href="login.html" class="btn btn-primary">Click here</a>
