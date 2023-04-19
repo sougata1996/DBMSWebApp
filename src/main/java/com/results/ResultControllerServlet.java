@@ -57,15 +57,19 @@ public class ResultControllerServlet extends HttpServlet {
 				break;	
 			case "INSERT":
 				addResult(request, response);
+				break;
 			case "LOAD":
 				loadResult(request, response);
+				break;
 			case "UPDATE":
 				updateResult(request, response);
+				break;
 			case "DELETE":
 				deleteResult(request, response);
+				break;
 			case "VIEW":
 				viewResult(request, response);
-			
+				break;
 			default:
 				listResults(request, response);
 			}
