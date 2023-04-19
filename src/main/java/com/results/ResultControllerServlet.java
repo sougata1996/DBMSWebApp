@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -93,7 +95,7 @@ public class ResultControllerServlet extends HttpServlet {
 			try {
 				String eval_type = "";
 			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(eval_type,Integer.parseInt(request.getSession().getAttribute(
-						"studentId").toString()), Integer.parseInt(request.getSession().getAttribute("courseId").toString()));
+						"courseId").toString()), Integer.parseInt(request.getSession().getAttribute("studentId").toString()));
 			;
 			// add students to the request
 			request.setAttribute("result_list", resultMap.get("results"));
@@ -130,7 +132,7 @@ public class ResultControllerServlet extends HttpServlet {
 		
 		private void updateResult(HttpServletRequest request, HttpServletResponse response) 
 				throws Exception {
-			try {
+			try { 
 			resultSet.updateResult(Integer.parseInt(request.getParameter("new_score").toString()),
 					request.getParameter("eval_name"), request.getParameter("eval_type"), 
 					Integer.parseInt(request.getSession().getAttribute("courseId").toString()),
@@ -185,7 +187,7 @@ public class ResultControllerServlet extends HttpServlet {
 					eval_type = request.getParameter("eval_type");
 				}
 			Map<String, Object> resultMap = resultSet.getResultsAndAverageFromAcourse(eval_type,Integer.parseInt(request.getSession().getAttribute(
-					"studentId").toString()), Integer.parseInt(request.getSession().getAttribute("courseId").toString()));
+					"courseId").toString()), Integer.parseInt(request.getSession().getAttribute("studentId").toString()));
 			// add students to the request
 			request.setAttribute("result_list", resultMap.get("results"));
 			request.setAttribute("average", resultMap.get("average"));
