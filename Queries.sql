@@ -1,6 +1,7 @@
 CREATE DATABASE ScoresDB;
 
 use ScoresDB;
+Set SQL_SAFE_UPDATES=0;
 
 -- Creates the teacher table
 CREATE TABLE Teacher (
