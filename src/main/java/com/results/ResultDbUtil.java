@@ -27,7 +27,7 @@ public class ResultDbUtil {
 	}
 	
 	public Map<String, Object> getResultsAndAverageFromAcourse(String evalType,
-			int student_id, int course_id) throws Exception{
+			int course_id, int student_id) throws Exception{
 	    Map<String, Object> resultAndAverage = new HashMap<>();
 	    List<Results> results = new ArrayList<>();
 	    int sum = 0;
@@ -55,7 +55,7 @@ public class ResultDbUtil {
 	            String eval_name = myRs.getString("eval_name");
 	            String eval_type = myRs.getString("eval_type");
 	            Results result = new Results(score, eval_name, eval_type,
-	                    student_id, course_id);
+	                    course_id, student_id);
 	            results.add(result);
 	        }
 	        if(count > 0) {
