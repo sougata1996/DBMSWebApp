@@ -341,7 +341,8 @@ insert into evaluation values (eval_name, eval_type,teacher_id, course_id);
 select * from evaluation where teacher_id = teacher_id;
 end //
 
--- This procedure is used to update evaluations.
+-- This procedure is used to update evaluation details and the corresponding results containing the same evaluation for that
+-- particular course.
 delimiter //
 create procedure updateEvaluationForACourse(
 teacherId int,
@@ -402,7 +403,8 @@ begin
 update results set score = newScore where eval_name = evalName and eval_type = evalType and course_id = courseId and student_id = studentId;
 end //
 
--- Deletes evaluation set for a course.
+-- Deletes evaluation set for a course and the results corresponding to that evaluation set for a 
+-- particular course.
 delimiter //
 create procedure deleteEvaluationForACourse(
 teacherId int,
@@ -417,7 +419,9 @@ delete from results where course_id = courseId and eval_name = evalName and
 eval_type = evalType;
 end //
 
--- Validation of the set results.
+-- Validation of the Result addition for a student by a teacher for a particular course wherein we check
+-- if the entered evaluation information is set by the teacher for that course prior to adding a result for
+-- the student.
 delimiter //
 create trigger validateResultInsertion 
 before insert on results 
