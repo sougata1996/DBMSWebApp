@@ -1,10 +1,10 @@
-CREATE DATABASE ScoresDB;
+CREATE DATABASE IF NOT EXISTS ScoresDB;
 
 use ScoresDB;
 Set SQL_SAFE_UPDATES=0;
 
 -- Creates the teacher table
-CREATE TABLE Teacher (
+CREATE TABLE IF NOT EXISTS Teacher (
 	  id INT PRIMARY KEY,
 	  first_name VARCHAR(50) NOT NULL,
 	  last_name VARCHAR(50) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE Teacher (
 );
 
 -- Creates the student table
-CREATE TABLE Student (
+CREATE TABLE IF NOT EXISTS Student (
 	  id INT PRIMARY KEY,
 	  first_name VARCHAR(50) NOT NULL,
 	  last_name VARCHAR(50) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE Student (
 );
 
 -- Creates the teacher course table
-CREATE TABLE Course (
+CREATE TABLE IF NOT EXISTS Course (
 	id INT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     teacher_id INT NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE Course (
 );
 
 -- Creates the student course table
-CREATE TABLE Student_Course (
+CREATE TABLE IF NOT EXISTS Student_Course (
   student_id INT NOT NULL,
   course_id INT NOT NULL,
   PRIMARY KEY (student_id, course_id),
@@ -42,17 +42,17 @@ CREATE TABLE Student_Course (
 -- Creates the admin credentials table.
 -- Data is already inserted into this table.
 -- See the insertion query below.
-CREATE TABLE admin_credentials (
-	login_name VARCHAR(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS admin_credentials (
+	id VARCHAR(50) NOT NULL,
     pwd varbinary(200) NOT NULL
 );
 
-insert into admin_credentials(login_name, pwd) 
-values ("admin" , aes_encrypt('admin','admin'));
+insert into admin_credentials(id, pwd) 
+values ("admin" , 'admin');
 
 -- Creates the evaluation table, the evaluation is set by teacher.
 -- Please take a look at the evaluation types set by a teacher for a particular course. 
-CREATE TABLE EVALUATION (
+CREATE TABLE IF NOT EXISTS EVALUATION (
 eval_name varchar(50) not null,
 eval_type enum ('Homework', 'Project', 'Assignment', 'Mid Term', 'Final Term') not null,
 teacher_id int not null,
@@ -63,7 +63,7 @@ FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCAD
 );
 
 -- Creates the results table.
-create table results(
+create table if not exists results(
 score int not null check (score between 0 and 100),
 eval_name varchar(50) not null,
 eval_type varchar(20) not null,
@@ -78,7 +78,7 @@ FOREIGN KEY (course_id) REFERENCES Course(id) ON UPDATE CASCADE ON DELETE CASCAD
 -- Note that student id is foreign key so it will throw an error,
 -- If we try to signup using an id that is not present in the student table
 -- That is if that id is not already added by the admin.
-create table student_credentials(
+create table if not exists student_credentials(
 id int unique not null,
 pwd varbinary(200) not null,
 foreign key (id) references Student(id) on update cascade on delete cascade
@@ -86,7 +86,7 @@ foreign key (id) references Student(id) on update cascade on delete cascade
 
 -- Creates the teacher credential table.
 -- Please read the comments of student_Credentials table.
-create table teacher_credentials(
+create table if not exists teacher_credentials(
 id int unique not null,
 pwd varbinary(200) not null,
 foreign key (id) references Teacher(id) on update cascade on delete cascade
@@ -250,17 +250,15 @@ CREATE FUNCTION readAdminCredentials(userId VARCHAR(50), passCode VARCHAR(200))
 RETURNS BOOLEAN
 READS SQL DATA
 BEGIN
-	DECLARE res_pwd VARCHAR(200);
+	declare res_pwd varchar(200);
     
-    SELECT CONVERT(AES_DECRYPT(pwd, userId), CHAR(200)) INTO res_pwd FROM admin_credentials
-    WHERE login_name = userId;
-    
-    IF res_pwd = passCode THEN
-		RETURN TRUE;
-	ELSE
-		RETURN FALSE;
+    select cast(pwd as char character set utf8) into res_pwd from admin_credentials where id = userId;
+    if res_pwd = passCode then
+		return true;
+	else
+		return false;
         
-	END IF;
+	end if;
 END //
 
 -- Inserts the student login info during signup of student.
